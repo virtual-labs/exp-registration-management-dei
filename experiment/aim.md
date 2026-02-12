@@ -1,1 +1,3 @@
-### Aim of the experiment
+# Aim
+
+* Explore UE registration (initial, mobility) .
