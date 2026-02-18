@@ -52,7 +52,9 @@ The registration procedure involves coordination among multiple network function
 <details>
 <summary><strong>3. UE Registration Process: Detailed Flow</strong></summary>
 
-![UE Registration Overall Message Sequence](images/fig1.png)
+<img src="images/fig1.svg" alt="UE Registration Overall Message Flow" width="70%">
+
+*Fig: UE Registration Overall Message Flow*
 
 ### Phase 1: Radio Access Establishment:
 

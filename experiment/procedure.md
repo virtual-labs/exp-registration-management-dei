@@ -1,22 +1,73 @@
-# Procedures
-
 ## Step 1: Deploy Core Network
 
 Choose one of the following deployment options:
+### Option A (Docker-Terminal):
+**Option A (Terminal):**
+Click on the **Terminal button** to open the terminal then from the project root directory, execute the following command:
 
-### Option A (Automatic - Recommended):
+
+This command starts all core network components (AMF, SMF, UPF, NRF, etc.) in detached mode
+
+```bash
+docker compose -f docker-compose.yml up -d
+```
+
+![Core Network Deployment](./images/prd1.png)
+
+
+# Once the core network is up and running, deploy the gNB services:
+
+```bash
+ docker compose -f docker-compose-gnb.yml up -d
+ ```
+This command initializes the gNB and establishes connectivity with the core network.
+
+![gnb Deployment](./images/prd2.png)
+
+
+# After the gNB deployment is complete, deploy the UE services:
+
+
+```bash
+docker compose -f docker-compose-ue.yml up -d
+```
+This starts the UE containers and attaches them to the gNB.
+
+![UE Deployment](./images/prd3.png)
+
+
+![](./images/prd4.png)
+
+
+
+# To verify that all containers are running successfully, execute:
+
+```bash
+docker ps
+```
+![docker ps output](./images/prd5.png)
+
+
+# To continuously monitor the status of the core network containers, use:
+
+```bash
+watch docker compose -f docker-compose.yml ps -a
+```
+![docker monitoring](./images/prd6.png)
+
+### Option B (Automatic - Recommended):
 
 1. Click the **One-Click Deploy** button on the top toolbar.
 2. Confirm the deployment when prompted.
 3. **Observation:** The system will automatically clear any existing topology and sequentially deploy the Service Bus, then all Network Functions (NRF, AMF, SMF, UPF, AUSF, UDM, PCF, NSSF, UDR, MySQL, gNB, UE, ext-dn), and establish the necessary connections. NFs will appear one by one.
 
-### Option B (Manual):
+### Option C (Manual):
 
 Manually add each Network Function from the Network Function panel, then enter configuration details in the left configuration panel and start the NF.
 
-![Core Network Deployment](./images/prd1.png)
+![Core Network Deployment](./images/prd7.png)
 
-**Fig: Core Network Deployment**
+*Fig: Core Network Deployment*
 
 ---
 
@@ -26,9 +77,9 @@ Once the core network is successfully deployed (wait for the "One-Click Topology
 
 1. Click on the **NAS** button in the top toolbar to switch the interface to the NAS Registration experiment mode.
 
-![Enable NAS Registration Mode](./images/prd2.png)
+![Enable NAS Registration Mode](./images/prd8.png)
 
-**Fig: Enable NAS Registration Mode**
+*Fig: Enable NAS Registration Mode*
 
 ---
 
@@ -39,9 +90,9 @@ You will now see the interface transform:
 - **Right Panel (NAS Registration Process):** A list of 13 interactive steps representing the registration flow.
 - **Left Panel (NAS Messages):** An inspector panel that displays the JSON content of every NAS message sent between NFs.
 
-![Experiment Panels Overview](./images/prd3.png)
+![Experiment Panels Overview](./images/prd9.png)
 
-**Fig: Experiment Panels Overview**
+*Fig: Experiment Panels Overview*
 
 ---
 
@@ -57,9 +108,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** A packet travels from UE to gNB, then to AMF. The left panel displays the JSON message containing the `RegistrationRequest` with `SUCI` (Subscription Concealed Identifier).
 
-![Step 1: Registration Request](./images/prd4.png)
+![Step 1: Registration Request](./images/prd10.png)
 
-**Fig: Step 1: Registration Request**
+*Fig: Step 1: Registration Request*
 
 ---
 
@@ -71,9 +122,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** A packet travels from AMF to gNB, then to UE. The JSON message shows `IdentityRequest`.
 
-![Step 2: Identity Request](./images/prd5.png)
+![Step 2: Identity Request](./images/prd11.png)
 
-**Fig: Step 2: Identity Request**
+*Fig: Step 2: Identity Request*
 
 ---
 
@@ -85,9 +136,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** A packet travels from UE back to AMF. The JSON message contains the `IdentityResponse` with `supi`.
 
-![Step 3: Identity Response](./images/prd6.png)
+![Step 3: Identity Response](./images/prd12.png)
 
-**Fig: Step 3: Identity Response**
+*Fig: Step 3: Identity Response*
 
 ---
 
@@ -99,9 +150,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** A packet travels from AMF to AUSF. The JSON message shows `AuthenticationRequest` using `5G-AKA`.
 
-![Step 4: Authentication Request](./images/prd7.png)
+![Step 4: Authentication Request](./images/13.png)
 
-**Fig: Step 4: Authentication Request**
+*Fig: Step 4: Authentication Request*
 
 ---
 
@@ -113,9 +164,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** A packet travels from AUSF to UDM.
 
-![Step 5: Security Data Request](./images/prd8.png)
+![Step 5: Security Data Request](./images/prd14.png)
 
-**Fig: Step 5: Security Data Request**
+*Fig: Step 5: Security Data Request*
 
 ---
 
@@ -127,9 +178,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels from UDM to AUSF. Message contains `AuthenticationVectors` (RAND, AUTN).
 
-![Step 6: Authentication Vectors](./images/prd9.png)
+![Step 6: Authentication Vectors](./images/prd15.png)
 
-**Fig: Step 6: Authentication Vectors**
+*Fig: Step 6: Authentication Vectors*
 
 ---
 
@@ -141,9 +192,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels from AUSF to AMF.
 
-![Step 7: Authentication Challenge](./images/prd10.png)
+![Step 7: Authentication Challenge](./images/prd16.png)
 
-**Fig: Step 7: Authentication Challenge**
+*Fig: Step 7: Authentication Challenge*
 
 ---
 
@@ -155,9 +206,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels from AMF to UE. Message is `NASAuthenticationRequest`.
 
-![Step 8: NAS Authentication Request](./images/prd11.png)
+![Step 8: NAS Authentication Request](./images/prd17.png)
 
-**Fig: Step 8: NAS Authentication Request**
+*Fig: Step 8: NAS Authentication Request*
 
 ---
 
@@ -169,9 +220,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels from UE to AMF. Message contains `AuthenticationResponse`.
 
-![Step 9: Authentication Response](./images/prd12.png)
+![Step 9: Authentication Response](./images/prd18.png)
 
-**Fig: Step 9: Authentication Response**
+*Fig: Step 9: Authentication Response*
 
 ---
 
@@ -183,9 +234,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels from AMF to UE. Message contains `SecurityModeCommand` (ciphering/integrity algorithms).
 
-![Step 10: Security Mode Command](./images/prd13.png)
+![Step 10: Security Mode Command](./images/prd19.png)
 
-**Fig: Step 10: Security Mode Command**
+*Fig: Step 10: Security Mode Command*
 
 ---
 
@@ -197,9 +248,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels to AMF. Message is `SecurityModeComplete`.
 
-![Step 11: Security Mode Complete](./images/prd14.png)
+![Step 11: Security Mode Complete](./images/prd20.png)
 
-**Fig: Step 11: Security Mode Complete**
+*Fig: Step 11: Security Mode Complete*
 
 ---
 
@@ -211,9 +262,9 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels to UE. Message is `RegistrationAccept` containing `5G-GUTI`.
 
-![Step 12: Registration Accept](./images/prd15.png)
+![Step 12: Registration Accept](./images/prd21.png)
 
-**Fig: Step 12: Registration Accept**
+*Fig: Step 12: Registration Accept*
 
 ---
 
@@ -225,6 +276,6 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels to AMF. Message is `RegistrationComplete` with status `OK`.
 
-![Step 13: Registration Complete](./images/prd16.png)
+![Step 13: Registration Complete](./images/prd22.png)
 
-**Fig: Step 13: Registration Complete**
+*Fig: Step 13: Registration Complete*

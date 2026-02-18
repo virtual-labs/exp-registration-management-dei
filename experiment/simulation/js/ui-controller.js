@@ -36,6 +36,7 @@ class UIController {
         this.setupClearButton();
         this.setupValidateButton();
         this.setupHelpButton();
+        this.setupDockerTerminalButton();
         this.setupConnectionButtons();
         this.setupNFPalette();
         this.setupConfigPanelToggle();
@@ -938,6 +939,27 @@ class UIController {
         helpBtn.addEventListener('click', () => {
             console.log('❓ Help clicked');
             this.showHelpModal();
+        });
+    }
+
+    /**
+     * Setup Docker Terminal button
+     */
+    setupDockerTerminalButton() {
+        const dockerTerminalBtn = document.getElementById('btn-docker-terminal');
+        if (!dockerTerminalBtn) {
+            console.warn('⚠️ Docker Terminal button not found');
+            return;
+        }
+
+        dockerTerminalBtn.addEventListener('click', () => {
+            console.log('🐳 Docker Terminal button clicked');
+            if (window.dockerTerminal) {
+                window.dockerTerminal.openTerminal();
+            } else {
+                console.error('❌ Docker Terminal not initialized');
+                alert('Docker Terminal is not available. Please refresh the page.');
+            }
         });
     }
 
