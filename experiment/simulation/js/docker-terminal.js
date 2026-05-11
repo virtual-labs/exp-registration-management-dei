@@ -1,4 +1,4 @@
-/***
+﻿/***
  * ============================================
  * DOCKER TERMINAL MANAGER
  * ============================================
@@ -62,24 +62,14 @@ class DockerTerminal {
                 <div class="docker-terminal-titlebar" id="docker-terminal-titlebar">
                     <div class="docker-terminal-title">
                         <span class="docker-terminal-icon">🐳</span>
-                        Docker Terminal - Main Terminal
+                        Docker Terminal
                     </div>
                     <div class="docker-terminal-controls">
-                        <button class="docker-terminal-btn minimize" id="docker-terminal-minimize" title="Minimize">−</button>
-                        <button class="docker-terminal-btn maximize" id="docker-terminal-maximize" title="Maximize">□</button>
                         <button class="docker-terminal-btn close" id="docker-terminal-close" title="Close">×</button>
                     </div>
                 </div>
                 <div class="docker-terminal-content" id="docker-terminal-content">
-                    <div class="docker-terminal-header">
-                        Docker Terminal v1.0<br>
-                        Type 'help' for available commands<br><br>
-                    </div>
                     <div class="docker-terminal-output" id="docker-terminal-output"></div>
-                    <div class="docker-terminal-input-line">
-                        <span class="docker-terminal-prompt">docker@main></span>
-                        <input type="text" id="docker-terminal-input" class="docker-terminal-input" autocomplete="off" spellcheck="false">
-                    </div>
                 </div>
                 <div class="docker-terminal-resize-handle" id="docker-terminal-resize-handle"></div>
             </div>
@@ -100,12 +90,6 @@ class DockerTerminal {
         setTimeout(() => {
             terminalModal.classList.add('show');
         }, 10);
-
-        // Focus on input
-        const input = document.getElementById('docker-terminal-input');
-        if (input) {
-            input.focus();
-        }
     }
 
     /**
@@ -113,12 +97,14 @@ class DockerTerminal {
      * @param {HTMLElement} terminalModal - Terminal modal element
      */
     setupTerminal(terminalModal) {
-        const input = document.getElementById('docker-terminal-input');
         const output = document.getElementById('docker-terminal-output');
+        const content = document.getElementById('docker-terminal-content');
         const closeBtn = document.getElementById('docker-terminal-close');
 
         let commandHistory = [];
         let historyIndex = -1;
+        let currentInput = null;
+        let currentInputLine = null;
 
         // Close button
         closeBtn.addEventListener('click', () => {
@@ -136,64 +122,225 @@ class DockerTerminal {
             }
         });
 
-        // Input handling
-        input.addEventListener('keydown', async (e) => {
-            // Handle Ctrl+C to stop watch mode
+        // Focus on terminal click
+        content.addEventListener('click', (e) => {
+            if (currentInput && !this.isWatching) {
+                currentInput.focus();
+            }
+        });
+
+        // Create input line
+        const createInputLine = () => {
+            // Remove existing input line if any
+            if (currentInputLine) {
+                currentInputLine.remove();
+            }
+
+            // Create new input line
+            const inputLine = document.createElement('div');
+            inputLine.className = 'docker-terminal-input-line';
+            inputLine.innerHTML = `
+                <span class="docker-terminal-prompt">docker@main$</span>
+                <input type="text" class="docker-terminal-input" autocomplete="off" spellcheck="false">
+            `;
+            output.appendChild(inputLine);
+            
+            currentInputLine = inputLine;
+            currentInput = inputLine.querySelector('.docker-terminal-input');
+            
+            // Setup input event handlers
+            currentInput.addEventListener('keydown', handleInputKeydown);
+            
+            // Focus the input
+            currentInput.focus();
+            
+            // Scroll to bottom
+            content.scrollTop = content.scrollHeight;
+            
+            return currentInput;
+        };
+
+        // Global Ctrl+C handler on the content area to stop watch mode
+        content.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'c' && this.isWatching) {
+                e.preventDefault();
+                this.stopWatch();
+                this.addTerminalLine(output, '^C', 'docker-terminal-command');
+                this.addTerminalLine(output, 'Watch mode stopped.', 'info');
+                this.addTerminalLine(output, '', 'blank');
+                createInputLine();
+            }
+        });
+
+        // Handle input keydown events
+        const handleInputKeydown = async (e) => {
+            // Handle Ctrl+C to stop watch mode (fallback via input)
             if (e.ctrlKey && e.key === 'c' && this.isWatching) {
                 e.preventDefault();
                 this.stopWatch();
                 this.addTerminalLine(output, '', 'blank');
                 this.addTerminalLine(output, 'Watch mode stopped.', 'info');
                 this.addTerminalLine(output, '', 'blank');
+                createInputLine();
                 return;
             }
 
             if (e.key === 'Enter') {
-                const command = input.value.trim();
+                const command = e.target.value.trim();
+                
+                // Move input line content to output as a regular line
+                const commandLine = document.createElement('div');
+                commandLine.className = 'docker-terminal-line docker-terminal-command';
+                commandLine.textContent = `docker@main${e.target.value}`;
+                
+                // Replace input line with command line
+                if (currentInputLine) {
+                    currentInputLine.replaceWith(commandLine);
+                }
+                
+                currentInputLine = null;
+                currentInput = null;
+                
                 if (command) {
                     // Add to history
                     commandHistory.push(command);
                     historyIndex = commandHistory.length;
 
-                    // Display command
-                    this.addTerminalLine(output, `docker@main>${command}`, 'command');
-
-                    // Clear input
-                    input.value = '';
-
                     // Process command
-                    await this.processCommand(command, output);
+                    await this.processCommand(command, output, content, createInputLine);
+                }
+                
+                // Create new input line after command execution
+                if (!this.isWatching) {
+                    createInputLine();
                 }
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 if (historyIndex > 0) {
                     historyIndex--;
-                    input.value = commandHistory[historyIndex];
+                    e.target.value = commandHistory[historyIndex];
+                    // Move cursor to end
+                    setTimeout(() => {
+                        e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+                    }, 0);
                 }
             } else if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 if (historyIndex < commandHistory.length - 1) {
                     historyIndex++;
-                    input.value = commandHistory[historyIndex];
+                    e.target.value = commandHistory[historyIndex];
                 } else {
                     historyIndex = commandHistory.length;
-                    input.value = '';
+                    e.target.value = '';
+                }
+                        } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const val = e.target.value;
+                if (!val.length) return;
+
+                const commands = [
+                    'help', 'status', 'check', 'cls', 'clear', 'exit', 'ls',
+                    'vi docker-compose.yml',
+                    'docker ps',
+                    'docker version',
+                    'docker network ls',
+                    'docker network inspect bridge',
+                    'docker network inspect host',
+                    'docker network inspect none',
+                    'docker network inspect oaiworkshop',
+                    'docker start ',
+                    'docker stop ',
+                    'docker compose -f docker-compose.yml up -d',
+                    'docker compose -f docker-compose.yml down',
+                    'docker compose -f docker-compose.yml up -d oai-nrf',
+                    'docker compose -f docker-compose.yml up -d oai-amf',
+                    'docker compose -f docker-compose.yml up -d oai-smf',
+                    'docker compose -f docker-compose.yml up -d oai-upf',
+                    'docker compose -f docker-compose.yml up -d oai-ausf',
+                    'docker compose -f docker-compose.yml up -d oai-udm',
+                    'docker compose -f docker-compose.yml up -d oai-udr',
+                    'docker compose -f docker-compose.yml up -d mysql',
+                    'docker compose -f docker-compose.yml down oai-nrf',
+                    'docker compose -f docker-compose.yml down oai-amf',
+                    'docker compose -f docker-compose.yml down oai-smf',
+                    'docker compose -f docker-compose.yml down oai-upf',
+                    'docker compose -f docker-compose.yml down oai-ausf',
+                    'docker compose -f docker-compose.yml down oai-udm',
+                    'docker compose -f docker-compose.yml down oai-udr',
+                    'docker compose -f docker-compose.yml down mysql',
+                    'docker compose -f docker-compose-gnb.yml up -d',
+                    'docker compose -f docker-compose-gnb.yml down',
+                    'docker compose -f docker-compose-ue.yml up -d',
+                    'docker compose -f docker-compose-ue.yml down',
+                    'docker compose -f docker-compose-ran.yml up -d oai-ue1',
+                    'docker compose -f docker-compose-ran.yml up -d oai-ue2',
+                    'docker-compose -f docker-compose.yml up -d',
+                    'docker-compose -f docker-compose.yml down',
+                    'watch docker compose -f docker-compose.yml ps -a',
+                ];
+
+                                const matches = commands.filter(c => c.toLowerCase().startsWith(val.toLowerCase()));
+
+                if (matches.length === 0) {
+                    e.target.style.opacity = '0.3';
+                    setTimeout(() => { e.target.style.opacity = '1'; }, 120);
+                } else if (matches.length === 1) {
+                    e.target.value = matches[0];
+                } else {
+                    const lcp = matches.reduce((prefix, cmd) => {
+                        let i = 0;
+                        while (i < prefix.length && i < cmd.length &&
+                               prefix[i].toLowerCase() === cmd[i].toLowerCase()) i++;
+                        return prefix.slice(0, i);
+                    });
+
+                    if (lcp.length > val.length) {
+                        e.target.value = lcp;
+                    } else {
+                        const cmdLine = document.createElement('div');
+                        cmdLine.className = 'docker-terminal-line docker-terminal-command';
+                        cmdLine.textContent = 'r:/home/user/oai-cn5g#' + val;
+                        if (currentInputLine) currentInputLine.replaceWith(cmdLine);
+                        currentInputLine = null;
+                        currentInput = null;
+
+                        const nextTokens = [...new Set(matches.map(m => {
+                            const rest = m.slice(val.length);
+                            const nextWord = rest.trimStart().split(' ')[0];
+                            return nextWord || rest.trim();
+                        }).filter(Boolean))];
+
+                        const colW = Math.max(...nextTokens.map(t => t.length)) + 4;
+                        const cols = Math.max(1, Math.floor(88 / colW));
+                        for (let i = 0; i < nextTokens.length; i += cols) {
+                            const row = nextTokens.slice(i, i + cols).map(t => t.padEnd(colW)).join('');
+                            this.addTerminalLine(output, row, 'info');
+                        }
+
+                        createInputLine();
+                        currentInput.value = val;
+                    }
                 }
             }
-        });
+        };
 
         // Initial welcome message
-        this.addTerminalLine(output, 'Welcome to Docker Terminal', 'info');
+        this.addTerminalLine(output, '5G WIRELESS LAB', 'info');
         this.addTerminalLine(output, 'Type "help" for available commands.', 'info');
         this.addTerminalLine(output, '', 'blank');
+        
+        // Create initial input line
+        createInputLine();
     }
 
     /**
      * Process Docker command
      * @param {string} command - Command to process
      * @param {HTMLElement} output - Output element
+     * @param {HTMLElement} content - Content container element
+     * @param {Function} createInputLine - Function to create new input line
      */
-    async processCommand(command, output) {
+    async processCommand(command, output, content, createInputLine) {
         const cmd = command.toLowerCase().trim();
         const args = command.split(' ');
 
@@ -241,6 +388,14 @@ class DockerTerminal {
         } else if (cmd === 'docker compose -f docker-compose-ue.yml down' ||
                    cmd === 'docker-compose -f docker-compose-ue.yml down') {
             await this.dockerComposeUeDown(output);
+        } else if (/^docker(-| )compose -f docker-compose\.yml down \S+/.test(cmd)) {
+            // docker compose -f docker-compose.yml down <service>
+            const serviceName = args[args.length - 1];
+            await this.dockerComposeSingleDown(serviceName, output);
+        } else if (/^docker(-| )compose -f docker-compose\.yml up -d \S+/.test(cmd)) {
+            // docker compose -f docker-compose.yml up -d <service>
+            const serviceName = args[args.length - 1];
+            await this.dockerComposeSingleUp(serviceName, output);
         } else if (cmd.startsWith('docker start ')) {
             const serviceName = args.slice(2).join(' ');
             await this.dockerStart(serviceName, output);
@@ -249,6 +404,11 @@ class DockerTerminal {
             await this.dockerStop(serviceName, output);
         } else if (cmd === 'cls' || cmd === 'clear') {
             output.innerHTML = '';
+        } else if (cmd === 'ls') {
+            this.lsCommand(output);
+        } else if (cmd === 'vi docker-compose.yml' || cmd === 'vim docker-compose.yml') {
+            this.viDockerCompose(output, content, createInputLine);
+            return; // vi handles its own input line creation
         } else if (cmd === 'exit') {
             const closeBtn = document.getElementById('docker-terminal-close');
             if (closeBtn) closeBtn.click();
@@ -309,58 +469,70 @@ class DockerTerminal {
      */
     showHelp(output) {
         const helpText = [
-            'Available Docker Commands:',
+            'Available Commands:',
             '',
             '  docker compose -f docker-compose.yml up -d',
-            '    Start all Core Network Functions (one-click deployment)',
+            '    Start all Core Network Functions',
             '',
             '  docker compose -f docker-compose-gnb.yml up -d',
-            '    Start gNB (gNodeB) container',
+            '    Start gNB container',
             '',
             '  docker compose -f docker-compose-ue.yml up -d',
-            '    Start both UE containers (oai-ue1 and oai-ue2)',
+            '    Start both UE containers',
             '',
             '  docker compose -f docker-compose-ran.yml up -d oai-ue1',
-            '    Start only UE1 container',
+            '    Start UE1 only',
             '',
             '  docker compose -f docker-compose-ran.yml up -d oai-ue2',
-            '    Start only UE2 container',
+            '    Start UE2 only',
             '',
             '  docker ps',
-            '    Show running Docker containers',
+            '    Show running containers',
             '',
             '  docker network ls',
-            '    List all Docker networks',
+            '    List Docker networks',
             '',
             '  docker network inspect <network-name>',
-            '    Inspect a specific Docker network (bridge, host, none, oaiworkshop)',
+            '    Inspect a network (bridge, host, none, oaiworkshop)',
             '',
             '  docker version',
-            '    Show Docker version information',
+            '    Show Docker version',
             '',
             '  watch docker compose -f docker-compose.yml ps -a',
-            '    Watch service status with auto-refresh (every 1 second)',
+            '    Watch service status (Ctrl+C to stop)',
             '',
             '  docker compose -f docker-compose.yml down',
-            '    Stop and remove all core network services',
+            '    Stop all core network services',
+            '',
+            '  docker compose -f docker-compose.yml down <service>',
+            '    Remove a single NF (e.g. oai-upf)',
+            '',
+            '  docker compose -f docker-compose.yml up -d <service>',
+            '    Re-add a single NF after it was removed',
             '',
             '  docker compose -f docker-compose-gnb.yml down',
-            '    Stop and remove gNB container',
+            '    Stop gNB container',
             '',
             '  docker compose -f docker-compose-ue.yml down',
-            '    Stop and remove all UE containers',
+            '    Stop all UE containers',
             '',
             '  docker start <service-name>',
-            '    Start a specific Network Function',
+            '    Start a stopped service (dot turns green)',
             '',
             '  docker stop <service-name>',
-            '    Stop a specific Network Function',
+            '    Stop a running service (dot turns red)',
+            '',
+            '  ls',
+            '    List files in current directory',
+            '',
+            '  vi docker-compose.yml',
+            '    View docker-compose.yml (read-only, press :q to exit)',
             '',
             '  cls / clear',
-            '    Clear the terminal screen',
+            '    Clear terminal screen',
             '',
             '  status / check',
-            '    Check system status and list available NFs',
+            '    Check system status',
             '',
             '  exit',
             '    Close the terminal',
@@ -373,206 +545,189 @@ class DockerTerminal {
     }
 
     /**
-     * Execute docker compose up -d (start all NFs)
-     * @param {HTMLElement} output - Output element
-     */
-    async dockerComposeUp(output) {
-        // Check if dataStore is available
-        if (!window.dataStore) {
-            this.addTerminalLine(output, 'Error: DataStore not initialized. Please refresh the page.', 'error');
-            console.error('❌ DataStore not available');
-            return;
-        }
+ * Execute docker compose up -d (start all NFs)
+ * @param {HTMLElement} output - Output element
+ */
+async dockerComposeUp(output) {
+    // Check if dataStore is available
+    if (!window.dataStore) {
+        this.addTerminalLine(output, 'Error: DataStore not initialized. Please refresh the page.', 'error');
+        console.error('❌ DataStore not available');
+        return;
+    }
 
-        // Check if NFManager is available
-        if (!window.nfManager) {
-            this.addTerminalLine(output, 'Error: NFManager not initialized. Please refresh the page.', 'error');
-            console.error('❌ NFManager not available');
-            return;
-        }
+    // Check if NFManager is available
+    if (!window.nfManager) {
+        this.addTerminalLine(output, 'Error: NFManager not initialized. Please refresh the page.', 'error');
+        console.error('❌ NFManager not available');
+        return;
+    }
 
-        // Get all NFs from data store (exclude gNB and UE for core network deployment)
-        let allNFs = window.dataStore.getAllNFs();
+    // STEP 1: Clean up existing core NFs first - prevents "only starting manually deployed NF" issue
+    const existingNFs = window.dataStore.getAllNFs() || [];
+    const coreNFsToRemove = existingNFs.filter(nf => nf.type !== 'gNB' && nf.type !== 'UE');
+    
+    if (coreNFsToRemove.length > 0) {
+        this.addTerminalLine(output, `[+] Cleaning up ${coreNFsToRemove.length} existing core network service(s)...`, 'warning');
         
-        // Filter out gNB and UE - they should only be started with separate compose files
-        allNFs = allNFs.filter(nf => nf.type !== 'gNB' && nf.type !== 'UE');
-
-        // If no NFs exist, load topology from one-click.json
-        if (!allNFs || allNFs.length === 0) {
-            try {
-                // Load topology from one-click.json
-                const response = await fetch('../one-click.json');
-                if (!response.ok) {
-                    throw new Error(`Failed to load one-click.json: ${response.statusText}`);
-                }
-
-                const topology = await response.json();
-
-                // Filter out gNB and UE from topology
-                const filteredTopology = this.filterTopology(topology);
-
-                // Import filtered topology into dataStore
-                // Set creation timestamps for all NFs before import
-                const importTime = Date.now();
-                if (filteredTopology.nfs && Array.isArray(filteredTopology.nfs)) {
-                    filteredTopology.nfs.forEach(nf => {
-                        nf.createdAt = importTime; // Set creation time
-                    });
-                }
-
-                window.dataStore.importData(filteredTopology);
-
-                // Load icon images and trigger logs for NFs
-                if (filteredTopology.nfs && Array.isArray(filteredTopology.nfs)) {
-                    for (const nf of filteredTopology.nfs) {
-                        // Skip gNB and UE
-                        if (nf.type === 'gNB' || nf.type === 'UE') continue;
-
-                        // Load icon image
-                        if (nf.icon && !nf.iconImage) {
-                            const img = new Image();
-                            img.onload = () => {
-                                nf.iconImage = img;
-                                if (window.canvasRenderer) {
-                                    window.canvasRenderer.render();
-                                }
-                            };
-                            img.onerror = () => {
-                                console.warn(`Failed to load icon for ${nf.name}: ${nf.icon}`);
-                            };
-                            img.src = nf.icon;
-                        }
-
-                        // Trigger log engine for this NF to generate startup logs
-                        if (window.logEngine) {
-                            // Get the NF from dataStore after import
-                            const importedNF = window.dataStore.getNFById(nf.id);
-                            if (importedNF) {
-                                // Use 5g-logs.json patterns for log generation
-                                window.logEngine.onNFAdded(importedNF);
-                            }
-                        }
-                    }
-                }
-
-                // Get updated list of NFs
-                allNFs = window.dataStore.getAllNFs();
-
-                // Re-render canvas to show imported topology
-                if (window.canvasRenderer) {
-                    window.canvasRenderer.render();
-                }
-            } catch (error) {
-                this.addTerminalLine(output, `❌ Failed to load topology: ${error.message}`, 'error');
-                this.addTerminalLine(output, 'Falling back to default NF creation...', 'warning');
-                this.addTerminalLine(output, '', 'blank');
-
-                // Fallback to default NFs if topology file fails
-                await this.createDefaultNFs(output);
-                allNFs = window.dataStore.getAllNFs();
+        for (const nf of coreNFsToRemove) {
+            // Remove NF but DON'T touch buses
+            if (window.nfManager) {
+                window.nfManager.deleteNetworkFunction(nf.id, { preserveBuses: true });
+            } else {
+                window.dataStore.removeNF(nf.id);
             }
+            await this.delay(50);
         }
-
-        // Show Docker Compose style output
-        this.addTerminalLine(output, `[+] Running ${allNFs.length + 1}/${allNFs.length + 1}`, 'info');
-
-        // Create network
-        this.addTerminalLine(output, ' ✔ Network oaiworkshop Created' + ' '.repeat(20) + '0.2s', 'success');
-        this.oaiWorkshopNetworkExists = true;
-        this.oaiWorkshopCreatedTime = Date.now();
-        await this.delay(200);
-
-        // Start each NF with Docker Compose format (skip gNB and UE)
-        for (const nf of allNFs) {
-            // Skip gNB and UE - they have separate compose files
-            if (nf.type === 'gNB' || nf.type === 'UE') {
-                continue;
-            }
-
-            // Get fresh NF from dataStore to ensure we have the latest
-            const freshNF = window.dataStore.getNFById(nf.id);
-            if (!freshNF) {
-                continue;
-            }
-
-            // Store creation timestamp if not already set
-            if (!freshNF.createdAt) {
-                freshNF.createdAt = Date.now();
-            }
-
-            // Get service name
-            const serviceNameMap = {
-                'AMF': 'oai-amf', 'SMF': 'oai-smf', 'UPF': 'oai-upf', 'AUSF': 'oai-ausf',
-                'UDM': 'oai-udm', 'UDR': 'oai-udr', 'NRF': 'oai-nrf', 'PCF': 'oai-pcf',
-                'NSSF': 'oai-nssf', 'MySQL': 'mysql', 'ext-dn': 'oai-ext-dn'
-            };
-            const serviceName = serviceNameMap[freshNF.type] || freshNF.type.toLowerCase();
-
-            // Show container creation with timing (random between 0.8s and 2.3s)
-            const randomDelay = (Math.random() * 1.5 + 0.8).toFixed(1); // 0.8s to 2.3s
-            this.addTerminalLine(output, ` ✔ Container ${serviceName.padEnd(16)} Started${' '.repeat(20)}${randomDelay}s`, 'success');
-            await this.delay(parseFloat(randomDelay) * 1000); // Convert to milliseconds
-
-            // Set status to starting (preserve createdAt)
-            freshNF.status = 'starting';
-            freshNF.statusTimestamp = Date.now();
-
-            // Ensure createdAt is preserved
-            if (!freshNF.createdAt) {
-                freshNF.createdAt = Date.now();
-            }
-
-            window.dataStore.updateNF(freshNF.id, freshNF);
-
-            // Generate startup log
-            if (window.logEngine) {
-                window.logEngine.addLog(freshNF.id, 'INFO', `${freshNF.name} starting via docker compose`, {
-                    ipAddress: freshNF.config.ipAddress,
-                    port: freshNF.config.port,
-                    protocol: freshNF.config.httpProtocol,
-                    status: 'starting',
-                    source: 'docker-compose'
-                });
-            }
-
-            // After 5 seconds, set to stable
-            setTimeout(() => {
-                const updatedNF = window.dataStore?.getNFById(freshNF.id);
-                if (updatedNF) {
-                    updatedNF.status = 'stable';
-                    updatedNF.statusTimestamp = Date.now();
-
-                    // Preserve createdAt timestamp
-                    if (!updatedNF.createdAt && freshNF.createdAt) {
-                        updatedNF.createdAt = freshNF.createdAt;
-                    }
-
-                    window.dataStore.updateNF(updatedNF.id, updatedNF);
-
-                    // Generate stable log
-                    if (window.logEngine) {
-                        window.logEngine.addLog(updatedNF.id, 'SUCCESS', `${updatedNF.name} is now STABLE and ready for connections`, {
-                            previousStatus: 'starting',
-                            newStatus: 'stable',
-                            uptime: '5 seconds',
-                            readyForConnections: true
-                        });
-                    }
-
-                    if (window.canvasRenderer) {
-                        window.canvasRenderer.render();
-                    }
-                }
-            }, 5000);
-        }
-
+        this.addTerminalLine(output, ' ✔ Cleanup complete', 'success');
         this.addTerminalLine(output, '', 'blank');
+    }
 
-        // Re-render canvas
+    // STEP 2: Load topology from one-click.json
+    let allNFs = [];
+    try {
+        const response = await fetch('../one-click.json');
+        if (!response.ok) {
+            throw new Error(`Failed to load one-click.json: ${response.statusText}`);
+        }
+
+        const topology = await response.json();
+        const filteredTopology = this.filterTopology(topology);
+
+        // Set creation timestamps for all NFs before import
+        const importTime = Date.now();
+        if (filteredTopology.nfs && Array.isArray(filteredTopology.nfs)) {
+            filteredTopology.nfs.forEach(nf => {
+                nf.createdAt = importTime;
+                nf.status = 'starting'; // Set initial status
+            });
+        }
+
+        window.dataStore.importData(filteredTopology);
+
+        // Load icon images and trigger logs for NFs
+        if (filteredTopology.nfs && Array.isArray(filteredTopology.nfs)) {
+            for (const nf of filteredTopology.nfs) {
+                if (nf.type === 'gNB' || nf.type === 'UE') continue;
+
+                // Load icon image
+                if (nf.icon && !nf.iconImage) {
+                    const img = new Image();
+                    img.onload = () => {
+                        nf.iconImage = img;
+                        if (window.canvasRenderer) {
+                            window.canvasRenderer.render();
+                        }
+                    };
+                    img.onerror = () => {
+                        console.warn(`Failed to load icon for ${nf.name}: ${nf.icon}`);
+                    };
+                    img.src = nf.icon;
+                }
+
+                // Trigger log engine
+                if (window.logEngine) {
+                    const importedNF = window.dataStore.getNFById(nf.id);
+                    if (importedNF) {
+                        window.logEngine.onNFAdded(importedNF);
+                    }
+                }
+            }
+        }
+
+        allNFs = window.dataStore.getAllNFs().filter(nf => nf.type !== 'gNB' && nf.type !== 'UE');
+
         if (window.canvasRenderer) {
             window.canvasRenderer.render();
         }
+    } catch (error) {
+        this.addTerminalLine(output, `❌ Failed to load topology: ${error.message}`, 'error');
+        this.addTerminalLine(output, 'Falling back to default NF creation...', 'warning');
+        this.addTerminalLine(output, '', 'blank');
+        await this.createDefaultNFs(output);
+        allNFs = window.dataStore.getAllNFs().filter(nf => nf.type !== 'gNB' && nf.type !== 'UE');
     }
+
+    // Show Docker Compose style output
+    this.addTerminalLine(output, `[+] Running ${allNFs.length + 1}/${allNFs.length + 1}`, 'info');
+
+    // Create network
+    this.addTerminalLine(output, ' ✔ Network oaiworkshop Created' + ' '.repeat(20) + '0.2s', 'success');
+    this.oaiWorkshopNetworkExists = true;
+    this.oaiWorkshopCreatedTime = Date.now();
+    await this.delay(200);
+
+    // Start each NF with Docker Compose format
+    for (const nf of allNFs) {
+        if (nf.type === 'gNB' || nf.type === 'UE') continue;
+
+        const freshNF = window.dataStore.getNFById(nf.id);
+        if (!freshNF) continue;
+
+        if (!freshNF.createdAt) {
+            freshNF.createdAt = Date.now();
+        }
+
+        const serviceNameMap = {
+            'AMF': 'oai-amf', 'SMF': 'oai-smf', 'UPF': 'oai-upf', 'AUSF': 'oai-ausf',
+            'UDM': 'oai-udm', 'UDR': 'oai-udr', 'NRF': 'oai-nrf', 'PCF': 'oai-pcf',
+            'NSSF': 'oai-nssf', 'MySQL': 'mysql', 'ext-dn': 'oai-ext-dn'
+        };
+        const serviceName = serviceNameMap[freshNF.type] || freshNF.type.toLowerCase();
+
+        const randomDelay = (Math.random() * 1.5 + 0.8).toFixed(1);
+        this.addTerminalLine(output, ` ✔ Container ${serviceName.padEnd(16)} Started${' '.repeat(20)}${randomDelay}s`, 'success');
+        await this.delay(parseFloat(randomDelay) * 1000);
+
+        freshNF.status = 'starting';
+        freshNF.statusTimestamp = Date.now();
+        if (!freshNF.createdAt) {
+            freshNF.createdAt = Date.now();
+        }
+        window.dataStore.updateNF(freshNF.id, freshNF);
+
+        if (window.logEngine) {
+            window.logEngine.addLog(freshNF.id, 'INFO', `${freshNF.name} starting via docker compose`, {
+                ipAddress: freshNF.config.ipAddress,
+                port: freshNF.config.port,
+                protocol: freshNF.config.httpProtocol,
+                status: 'starting',
+                source: 'docker-compose'
+            });
+        }
+
+        setTimeout(() => {
+            const updatedNF = window.dataStore?.getNFById(freshNF.id);
+            if (updatedNF) {
+                updatedNF.status = 'stable';
+                updatedNF.statusTimestamp = Date.now();
+                if (!updatedNF.createdAt && freshNF.createdAt) {
+                    updatedNF.createdAt = freshNF.createdAt;
+                }
+                window.dataStore.updateNF(updatedNF.id, updatedNF);
+
+                if (window.logEngine) {
+                    window.logEngine.addLog(updatedNF.id, 'SUCCESS', `${updatedNF.name} is now STABLE and ready for connections`, {
+                        previousStatus: 'starting',
+                        newStatus: 'stable',
+                        uptime: '5 seconds',
+                        readyForConnections: true
+                    });
+                }
+
+                if (window.canvasRenderer) {
+                    window.canvasRenderer.render();
+                }
+            }
+        }, 5000);
+    }
+
+    this.addTerminalLine(output, '', 'blank');
+
+    if (window.canvasRenderer) {
+        window.canvasRenderer.render();
+    }
+}
 
     /**
      * Execute docker compose -f docker-compose-gnb.yml up -d (start gNB)
@@ -960,6 +1115,13 @@ class DockerTerminal {
         this.addTerminalLine(output, 'Press Ctrl+C to stop watching', 'info');
         this.addTerminalLine(output, '', 'blank');
 
+        // Make content focusable and focus it so Ctrl+C keydown fires
+        const content = document.getElementById('docker-terminal-content');
+        if (content) {
+            content.setAttribute('tabindex', '0');
+            content.focus();
+        }
+
         // Store initial content length to know where to clear from
         const initialLength = output.querySelectorAll('.docker-terminal-line').length;
 
@@ -1063,88 +1225,294 @@ class DockerTerminal {
     }
 
     /**
-     * Execute docker compose down (stop and remove all core network services)
-     * @param {HTMLElement} output - Output element
-     */
-    async dockerComposeDown(output) {
-        const allNFs = window.dataStore?.getAllNFs() || [];
-        
-        // Filter to only core network NFs (exclude gNB and UE)
-        const coreNFs = allNFs.filter(nf => nf.type !== 'gNB' && nf.type !== 'UE');
+ * Execute docker compose down (stop and remove all core network services)
+ * @param {HTMLElement} output - Output element
+ */
+async dockerComposeDown(output) {
+    const allNFs = window.dataStore?.getAllNFs() || [];
+    
+    // Filter to only core network NFs (exclude gNB and UE)
+    const coreNFs = allNFs.filter(nf => nf.type !== 'gNB' && nf.type !== 'UE');
 
-        if (coreNFs.length === 0) {
-            this.addTerminalLine(output, 'No core network services to stop.', 'info');
+    if (coreNFs.length === 0) {
+        this.addTerminalLine(output, 'No core network services to stop.', 'info');
+        return;
+    }
+
+    // Collect all NF IDs first
+    const nfIds = coreNFs.map(nf => ({ id: nf.id, name: nf.name, type: nf.type }));
+
+    // Show Docker Compose style output
+    this.addTerminalLine(output, `[+] Running ${nfIds.length + 1}/${nfIds.length + 1}`, 'info');
+
+    // Stop and remove each service
+    for (const nfInfo of nfIds) {
+        if (nfInfo.type === 'gNB' || nfInfo.type === 'UE') continue;
+
+        const serviceNameMap = {
+            'AMF': 'oai-amf', 'SMF': 'oai-smf', 'UPF': 'oai-upf', 'AUSF': 'oai-ausf',
+            'UDM': 'oai-udm', 'UDR': 'oai-udr', 'NRF': 'oai-nrf', 'PCF': 'oai-pcf',
+            'NSSF': 'oai-nssf', 'MySQL': 'mysql', 'ext-dn': 'oai-ext-dn'
+        };
+        const serviceName = serviceNameMap[nfInfo.type] || nfInfo.type.toLowerCase();
+
+        const randomDelay = (Math.random() * 1.5 + 0.8).toFixed(1);
+        this.addTerminalLine(output, ` ✔ Container ${serviceName.padEnd(16)} Removed${' '.repeat(20)}${randomDelay}s`, 'success');
+        await this.delay(parseFloat(randomDelay) * 1000);
+
+        // CRITICAL: Remove NF but preserve buses
+        // Pass preserveBuses: true to prevent bus deletion
+        if (window.nfManager) {
+            window.nfManager.deleteNetworkFunction(nfInfo.id, { preserveBuses: true });
+        } else if (window.dataStore) {
+            window.dataStore.removeNF(nfInfo.id);
+        }
+    }
+
+    // DO NOT clear buses and bus connections - removed that block entirely
+
+    // Remove network
+    this.addTerminalLine(output, ` ✔ Network oaiworkshop Removed${' '.repeat(20)}0.2s`, 'success');
+    this.oaiWorkshopNetworkExists = false;
+    this.oaiWorkshopCreatedTime = null;
+
+    this.addTerminalLine(output, '', 'blank');
+
+    if (window.canvasRenderer) {
+        window.canvasRenderer.render();
+    }
+}
+
+    /**
+     * Remove a single NF via docker compose down <service>
+     * To re-add it the user must run: docker compose -f docker-compose.yml up -d <service>
+     * @param {string} serviceName - e.g. "oai-upf"
+     * @param {HTMLElement} output
+     */
+    async dockerComposeSingleDown(serviceName, output) {
+        const serviceNameMap = {
+            'oai-amf': 'AMF', 'oai-smf': 'SMF', 'oai-upf': 'UPF', 'oai-ausf': 'AUSF',
+            'oai-udm': 'UDM', 'oai-udr': 'UDR', 'oai-nrf': 'NRF', 'oai-pcf': 'PCF',
+            'oai-nssf': 'NSSF', 'mysql': 'MySQL', 'ext-dn': 'oai-ext-dn', 'oai-ext-dn': 'ext-dn'
+        };
+
+        const nfType = serviceNameMap[serviceName.toLowerCase()];
+        const allNFs = window.dataStore?.getAllNFs() || [];
+        const nf = allNFs.find(n => n.type === nfType);
+
+        if (!nf) {
+            this.addTerminalLine(output, `no such service: ${serviceName}`, 'error');
             return;
         }
 
-        // Collect all NF IDs first (before deletion to avoid iteration issues)
-        const nfIds = coreNFs.map(nf => ({ id: nf.id, name: nf.name, type: nf.type }));
+        this.addTerminalLine(output, `[+] Running 1/1`, 'info');
+        const randomDelay = (Math.random() * 0.8 + 0.3).toFixed(1);
+        this.addTerminalLine(output, ` ✔ Container ${serviceName.padEnd(16)} Removed${' '.repeat(20)}${randomDelay}s`, 'success');
+        await this.delay(parseFloat(randomDelay) * 1000);
 
-        // Show Docker Compose style output
-        this.addTerminalLine(output, `[+] Running ${nfIds.length + 1}/${nfIds.length + 1}`, 'info');
-
-        // Stop and remove each service
-        for (const nfInfo of nfIds) {
-            // Skip gNB and UE (double check)
-            if (nfInfo.type === 'gNB' || nfInfo.type === 'UE') {
-                continue;
-            }
-
-            // Get service name
-            const serviceNameMap = {
-                'AMF': 'oai-amf', 'SMF': 'oai-smf', 'UPF': 'oai-upf', 'AUSF': 'oai-ausf',
-                'UDM': 'oai-udm', 'UDR': 'oai-udr', 'NRF': 'oai-nrf', 'PCF': 'oai-pcf',
-                'NSSF': 'oai-nssf', 'MySQL': 'mysql', 'ext-dn': 'oai-ext-dn'
-            };
-            const serviceName = serviceNameMap[nfInfo.type] || nfInfo.type.toLowerCase();
-
-            // Random delay between 0.8s and 2.3s
-            const randomDelay = (Math.random() * 1.5 + 0.8).toFixed(1);
-            this.addTerminalLine(output, ` ✔ Container ${serviceName.padEnd(16)} Removed${' '.repeat(20)}${randomDelay}s`, 'success');
-            await this.delay(parseFloat(randomDelay) * 1000);
-
-            // Actually remove the NF (this also removes connections)
-            if (window.nfManager) {
-                window.nfManager.deleteNetworkFunction(nfInfo.id);
-            } else if (window.dataStore) {
-                window.dataStore.removeNF(nfInfo.id);
-            }
+        if (window.nfManager) {
+            window.nfManager.deleteNetworkFunction(nf.id, { preserveBuses: true });
+        } else if (window.dataStore) {
+            window.dataStore.removeNF(nf.id);
         }
-
-        // Also clear buses and bus connections
-        if (window.dataStore) {
-            const allBuses = window.dataStore.getAllBuses() || [];
-            const allBusConnections = window.dataStore.getAllBusConnections() || [];
-
-            if (allBuses.length > 0 || allBusConnections.length > 0) {
-                const busConnectionIds = allBusConnections.map(bc => bc.id);
-                const busIds = allBuses.map(bus => bus.id);
-
-                busConnectionIds.forEach(busConnId => {
-                    window.dataStore.removeBusConnection(busConnId);
-                });
-
-                busIds.forEach(busId => {
-                    window.dataStore.removeBus(busId);
-                });
-            }
-        }
-
-        // Remove network
-        this.addTerminalLine(output, ` ✔ Network oaiworkshop Removed${' '.repeat(20)}0.2s`, 'success');
-        this.oaiWorkshopNetworkExists = false;
-        this.oaiWorkshopCreatedTime = null;
 
         this.addTerminalLine(output, '', 'blank');
+        this.addTerminalLine(output, `To add it back run:  docker compose -f docker-compose.yml up -d ${serviceName}`, 'info');
 
-        // Re-render canvas
         if (window.canvasRenderer) {
             window.canvasRenderer.render();
         }
     }
 
     /**
-     * Start a specific service
+     * Re-add a single NF via docker compose up -d <service> and restore its connections
+     * @param {string} serviceName - e.g. "oai-upf"
+     * @param {HTMLElement} output
+     */
+    async dockerComposeSingleUp(serviceName, output) {
+        const serviceToType = {
+            'oai-amf': 'AMF', 'oai-smf': 'SMF', 'oai-upf': 'UPF', 'oai-ausf': 'AUSF',
+            'oai-udm': 'UDM', 'oai-udr': 'UDR', 'oai-nrf': 'NRF', 'oai-pcf': 'PCF',
+            'oai-nssf': 'NSSF', 'mysql': 'MySQL', 'oai-ext-dn': 'ext-dn'
+        };
+
+        const nfType = serviceToType[serviceName.toLowerCase()];
+        if (!nfType) {
+            this.addTerminalLine(output, `no such service: ${serviceName}`, 'error');
+            return;
+        }
+
+        // Check if it already exists
+        const existing = (window.dataStore?.getAllNFs() || []).find(n => n.type === nfType);
+        if (existing) {
+            this.addTerminalLine(output, `Container ${serviceName} already running.`, 'warning');
+            return;
+        }
+
+        if (!window.nfManager) {
+            this.addTerminalLine(output, 'Error: NFManager not available.', 'error');
+            return;
+        }
+
+        // Load topology from one-click.json to get position + original connections
+        let topoNFCfg = null;
+        let topoBusConnections = [];
+        let topoConnections = [];
+        let topoBuses = [];
+        try {
+            const resp = await fetch('../one-click.json');
+            if (resp.ok) {
+                const topo = await resp.json();
+                topoNFCfg = (topo.nfs || []).find(n => n.type === nfType);
+                topoBusConnections = topo.busConnections || [];
+                topoConnections = topo.connections || [];
+                topoBuses = topo.buses || [];
+            }
+        } catch (_) { /* fall through */ }
+
+        this.addTerminalLine(output, `[+] Running 1/1`, 'info');
+
+        const nf = window.nfManager.createNetworkFunction(nfType, topoNFCfg?.position || null);
+        if (!nf) {
+            this.addTerminalLine(output, `Failed to create ${serviceName}.`, 'error');
+            return;
+        }
+
+        nf.status = 'starting';
+        nf.statusTimestamp = Date.now();
+        nf.createdAt = Date.now();
+        window.dataStore.updateNF(nf.id, nf);
+
+        const randomDelay = (Math.random() * 1.2 + 0.5).toFixed(1);
+        this.addTerminalLine(output, ` ✔ Container ${serviceName.padEnd(16)} Started${' '.repeat(20)}${randomDelay}s`, 'success');
+        await this.delay(parseFloat(randomDelay) * 1000);
+
+        // ── Restore bus connections ──────────────────────────────────────────
+        // Find which buses this NF was connected to in one-click.json (by type match)
+        if (topoNFCfg && window.busManager) {
+            const originalNFId = topoNFCfg.id;
+
+            // Check bus.connections arrays
+            for (const topoBus of topoBuses) {
+                if (Array.isArray(topoBus.connections) && topoBus.connections.includes(originalNFId)) {
+                    // Find the live bus that matches by name or position (buses are preserved)
+                    const liveBuses = window.dataStore?.getAllBuses() || [];
+                    const liveBus = liveBuses.find(b => b.name === topoBus.name) ||
+                                    liveBuses.find(b =>
+                                        Math.abs(b.position.x - topoBus.position.x) < 5 &&
+                                        Math.abs(b.position.y - topoBus.position.y) < 5
+                                    ) ||
+                                    liveBuses[0]; // fallback to first bus
+
+                    if (liveBus && !liveBus.connections.includes(nf.id)) {
+                        window.busManager.connectNFToBus(nf.id, liveBus.id);
+                        this.addTerminalLine(output, `   ↳ Reconnected to ${liveBus.name}`, 'info');
+                    }
+                }
+            }
+
+            // Also check busConnections array for any that reference this NF
+            for (const bc of topoBusConnections) {
+                if (bc.nfId === originalNFId) {
+                    const matchingTopoBus = topoBuses.find(b => b.id === bc.busId);
+                    if (!matchingTopoBus) continue;
+
+                    const liveBuses = window.dataStore?.getAllBuses() || [];
+                    const liveBus = liveBuses.find(b => b.name === matchingTopoBus.name) ||
+                                    liveBuses.find(b =>
+                                        Math.abs(b.position.x - matchingTopoBus.position.x) < 5 &&
+                                        Math.abs(b.position.y - matchingTopoBus.position.y) < 5
+                                    ) ||
+                                    liveBuses[0];
+
+                    if (liveBus && !liveBus.connections.includes(nf.id)) {
+                        window.busManager.connectNFToBus(nf.id, liveBus.id);
+                    }
+                }
+            }
+        }
+
+        // ── Restore NF-to-NF connections ────────────────────────────────────
+        // Build a type→liveId map for all currently live NFs
+        if (topoNFCfg && window.connectionManager) {
+            const originalNFId = topoNFCfg.id;
+            const liveNFs = window.dataStore?.getAllNFs() || [];
+
+            // Map original topo IDs → live NF IDs by type
+            const topoNFs = [];
+            try {
+                const resp2 = await fetch('../one-click.json');
+                if (resp2.ok) {
+                    const t2 = await resp2.json();
+                    topoNFs.push(...(t2.nfs || []));
+                }
+            } catch (_) {}
+
+            const topoIdToLiveId = {};
+            for (const tnf of topoNFs) {
+                const liveMatch = liveNFs.find(l => l.type === tnf.type);
+                if (liveMatch) topoIdToLiveId[tnf.id] = liveMatch.id;
+            }
+            // The newly created NF maps to itself
+            topoIdToLiveId[originalNFId] = nf.id;
+
+            for (const conn of topoConnections) {
+                const involvesThis = conn.sourceId === originalNFId || conn.targetId === originalNFId;
+                if (!involvesThis) continue;
+
+                const liveSrcId = topoIdToLiveId[conn.sourceId];
+                const liveDstId = topoIdToLiveId[conn.targetId];
+
+                if (!liveSrcId || !liveDstId) continue;
+
+                // Skip if connection already exists
+                if (window.dataStore.connectionExists(liveSrcId, liveDstId)) continue;
+
+                window.connectionManager.createManualConnection(liveSrcId, liveDstId);
+                const srcNF = window.dataStore.getNFById(liveSrcId);
+                const dstNF = window.dataStore.getNFById(liveDstId);
+                this.addTerminalLine(output, `   ↳ Reconnected ${srcNF?.name || liveSrcId} → ${dstNF?.name || liveDstId}`, 'info');
+            }
+        }
+
+        if (window.logEngine) {
+            window.logEngine.addLog(nf.id, 'INFO', `${nf.name} starting via docker compose`, {
+                container: serviceName,
+                status: 'starting',
+                source: 'docker-compose'
+            });
+        }
+
+        if (window.canvasRenderer) {
+            window.canvasRenderer.render();
+        }
+
+        // Transition to stable after 5s
+        setTimeout(() => {
+            const updatedNF = window.dataStore?.getNFById(nf.id);
+            if (updatedNF) {
+                updatedNF.status = 'stable';
+                updatedNF.statusTimestamp = Date.now();
+                window.dataStore.updateNF(updatedNF.id, updatedNF);
+
+                if (window.logEngine) {
+                    window.logEngine.addLog(updatedNF.id, 'SUCCESS', `${updatedNF.name} is now STABLE and ready for connections`, {
+                        container: serviceName,
+                        previousStatus: 'starting',
+                        newStatus: 'stable',
+                        source: 'docker-compose'
+                    });
+                }
+
+                if (window.canvasRenderer) {
+                    window.canvasRenderer.render();
+                }
+            }
+        }, 5000);
+    }
+
+    /**
+     * Start a specific service (docker start) — turns dot green, logs the event
      * @param {string} serviceName - Service name to start
      * @param {HTMLElement} output - Output element
      */
@@ -1165,11 +1533,11 @@ class DockerTerminal {
         const nf = allNFs.find(n => n.type === nfType);
 
         if (!nf) {
-            this.addTerminalLine(output, `Service '${serviceName}' not found.`, 'error');
+            this.addTerminalLine(output, `Error response from daemon: No such container: ${serviceName}`, 'error');
             return;
         }
 
-        this.addTerminalLine(output, `Starting ${nf.name}...`, 'info');
+        this.addTerminalLine(output, serviceName, 'info');
 
         if (!nf.createdAt) {
             nf.createdAt = Date.now();
@@ -1178,27 +1546,46 @@ class DockerTerminal {
         nf.statusTimestamp = Date.now();
         window.dataStore.updateNF(nf.id, nf);
 
+        if (window.logEngine) {
+            window.logEngine.addLog(nf.id, 'INFO', `${nf.name} is starting`, {
+                container: serviceName,
+                previousStatus: 'stopped',
+                newStatus: 'starting',
+                startedAt: new Date().toISOString(),
+                source: 'docker start'
+            });
+        }
+
+        if (window.canvasRenderer) {
+            window.canvasRenderer.render();
+        }
+
+        // Transition to stable after 5s — dot turns green
         setTimeout(() => {
-            if (window.dataStore?.getNFById(nf.id)) {
-                nf.status = 'stable';
-                nf.statusTimestamp = Date.now();
-                window.dataStore.updateNF(nf.id, nf);
+            const updatedNF = window.dataStore?.getNFById(nf.id);
+            if (updatedNF) {
+                updatedNF.status = 'stable';
+                updatedNF.statusTimestamp = Date.now();
+                window.dataStore.updateNF(updatedNF.id, updatedNF);
+
+                if (window.logEngine) {
+                    window.logEngine.addLog(updatedNF.id, 'SUCCESS', `${updatedNF.name} is now STABLE and running`, {
+                        container: serviceName,
+                        previousStatus: 'starting',
+                        newStatus: 'stable',
+                        source: 'docker start'
+                    });
+                }
+
                 if (window.canvasRenderer) {
                     window.canvasRenderer.render();
                 }
             }
         }, 5000);
-
-        this.addTerminalLine(output, `✅ ${nf.name} started (status: starting)`, 'success');
-        this.addTerminalLine(output, 'Service will be stable in ~5 seconds', 'info');
-
-        if (window.canvasRenderer) {
-            window.canvasRenderer.render();
-        }
     }
 
     /**
-     * Stop a specific service
+     * Stop a specific service (docker stop) — turns dot red, logs the event
      * @param {string} serviceName - Service name to stop
      * @param {HTMLElement} output - Output element
      */
@@ -1219,16 +1606,27 @@ class DockerTerminal {
         const nf = allNFs.find(n => n.type === nfType);
 
         if (!nf) {
-            this.addTerminalLine(output, `Service '${serviceName}' not found.`, 'error');
+            this.addTerminalLine(output, `Error response from daemon: No such container: ${serviceName}`, 'error');
             return;
         }
 
-        this.addTerminalLine(output, `Stopping ${nf.name}...`, 'info');
+        this.addTerminalLine(output, serviceName, 'info');
+
+        // Set status to stopped — canvas-renderer maps this to red via getStatusColor
         nf.status = 'stopped';
         nf.statusTimestamp = Date.now();
         window.dataStore.updateNF(nf.id, nf);
 
-        this.addTerminalLine(output, `✅ ${nf.name} stopped`, 'success');
+        // Log the stop event
+        if (window.logEngine) {
+            window.logEngine.addLog(nf.id, 'WARNING', `${nf.name} has been stopped`, {
+                container: serviceName,
+                previousStatus: 'stable',
+                newStatus: 'stopped',
+                stoppedAt: new Date().toISOString(),
+                source: 'docker stop'
+            });
+        }
 
         if (window.canvasRenderer) {
             window.canvasRenderer.render();
@@ -1236,6 +1634,379 @@ class DockerTerminal {
     }
 
     /**
+     * ls command - list files in current directory
+     * @param {HTMLElement} output - Output element
+     */
+    lsCommand(output) {
+        const files = [
+            { name: 'docker-compose.yml',     type: 'file',  size: '4.2K', date: 'Apr 10 09:15' },
+        ];
+        files.forEach(f => {
+            const color = f.type === 'dir' ? 'docker-terminal-success' : 'docker-terminal-info';
+            const prefix = f.type === 'dir' ? 'd' : '-';
+            const perms = f.type === 'dir' ? 'rwxr-xr-x' : 'rw-r--r--';
+            const line = `${f.name}`;
+            const el = document.createElement('div');
+            el.className = `docker-terminal-line ${color}`;
+            el.textContent = line;
+            output.appendChild(el);
+        });
+        output.scrollTop = output.scrollHeight;
+    }
+
+    /**
+     * vi docker-compose.yml - read-only viewer
+     * @param {HTMLElement} output - Output element
+     * @param {HTMLElement} content - Content container
+     * @param {Function} createInputLine - Function to restore normal input
+     */
+    viDockerCompose(output, content, createInputLine) {
+        const dockerComposeContent = `services:
+  mysql:
+    container_name: "mysql"
+    image: ghcr.io/openairinterface/mysql:8.0
+    volumes:
+      - ./database/oai_db.sql:/docker-entrypoint-initdb.d/oai_db.sql
+      - ./healthscripts/mysql-healthcheck.sh:/tmp/mysql-healthcheck.sh
+    environment:
+      - TZ=Europe/Paris
+      - MYSQL_DATABASE=oai_db
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=test
+      - MYSQL_ROOT_PASSWORD=linux
+    healthcheck:
+      test: /bin/bash -c "/tmp/mysql-healthcheck.sh"
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.131
+
+  oai-udr:
+    container_name: "oai-udr"
+    image: ghcr.io/openairinterface/oai-udr:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+    volumes:
+      - ./conf/config.yaml:/openair-udr/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - mysql
+      - oai-nrf
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.136
+
+  oai-udm:
+    container_name: "oai-udm"
+    image: ghcr.io/openairinterface/oai-udm:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+    volumes:
+      - ./conf/config.yaml:/openair-udm/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - oai-udr
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.137
+
+  oai-ausf:
+    container_name: "oai-ausf"
+    image: ghcr.io/openairinterface/oai-ausf:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+    volumes:
+      - ./conf/config.yaml:/openair-ausf/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - oai-udm
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.138
+
+  oai-nrf:
+    container_name: "oai-nrf"
+    image: ghcr.io/openairinterface/oai-nrf:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+    volumes:
+      - ./conf/config.yaml:/openair-nrf/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.130
+
+  oai-amf:
+    container_name: "oai-amf"
+    image: ghcr.io/openairinterface/oai-amf:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+      - 38412/sctp
+    volumes:
+      - ./conf/config.yaml:/openair-amf/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - mysql
+      - oai-nrf
+      - oai-ausf
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.132
+
+  oai-smf:
+    container_name: "oai-smf"
+    image: ghcr.io/openairinterface/oai-smf:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+      - 8805/udp
+    volumes:
+      - ./conf/config.yaml:/openair-smf/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - oai-nrf
+      - oai-amf
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.133
+
+  oai-upf:
+    container_name: "oai-upf"
+    image: ghcr.io/openairinterface/oai-upf:develop
+    expose:
+      - 80/tcp
+      - 2152/udp
+      - 8805/udp
+    volumes:
+      - ./conf/config.yaml:/openair-upf/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - oai-nrf
+      - oai-smf
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    cap_drop:
+      - ALL
+    privileged: true
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.134
+
+  oai-traffic-server:
+    privileged: true
+    init: true
+    container_name: oai-ext-dn
+    image: ghcr.io/openairinterface/trf-gen-cn5g:latest
+    environment:
+      - UPF_FQDN=oai-upf
+      - UE_NETWORK=10.0.0.0/24
+      - USE_FQDN=yes
+    healthcheck:
+      test: /bin/bash -c "ip r | grep 12.1.1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.135
+
+networks:
+  public_net:
+    driver: bridge
+    name: oaiworkshop
+    ipam:
+      config:
+        - subnet: 192.168.70.128/26
+    driver_opts:
+      com.docker.network.bridge.name: "oaiworkshop"`;
+
+        // Build a full-screen vi overlay inside the terminal window
+        const termWindow = document.getElementById('docker-terminal-window');
+        if (!termWindow) return;
+
+        // Hide the normal content area
+        const termContent = document.getElementById('docker-terminal-content');
+        if (termContent) termContent.style.display = 'none';
+
+        // Create vi overlay
+        const viOverlay = document.createElement('div');
+        viOverlay.id = 'vi-overlay';
+        viOverlay.style.cssText = [
+            'position:absolute',
+            'top:32px',          // below titlebar
+            'left:0',
+            'right:0',
+            'bottom:0',
+            'background:#000000',
+            'display:flex',
+            'flex-direction:column',
+            'font-family:Consolas,"Courier New",monospace',
+            'font-size:14px',
+            'z-index:10',
+        ].join(';');
+
+        // Scrollable file content area
+        const fileArea = document.createElement('div');
+        fileArea.style.cssText = 'flex:1;overflow-y:auto;padding:0 4px;';
+
+        const lines = dockerComposeContent.split('\n');
+        lines.forEach((line, i) => {
+            const el = document.createElement('div');
+            el.style.cssText = 'white-space:pre;color:#ffffff;line-height:1.5;';
+            const lineNum = String(i + 1).padStart(4, ' ');
+            el.textContent = lineNum + '  ' + line;
+            fileArea.appendChild(el);
+        });
+
+        // Fixed status bar (bottom-1)
+        const statusBar = document.createElement('div');
+        statusBar.style.cssText = [
+            'background:#1a1a6e',
+            'color:#ffffff',
+            'padding:1px 8px',
+            'font-weight:bold',
+            'flex-shrink:0',
+            'white-space:nowrap',
+            'overflow:hidden',
+        ].join(';');
+        statusBar.textContent = '"docker-compose.yml" [readonly]  ' + lines.length + 'L';
+
+        // Command line at very bottom — shows typed :q
+        const cmdBar = document.createElement('div');
+        cmdBar.style.cssText = [
+            'display:flex',
+            'align-items:center',
+            'background:#000000',
+            'color:#ffffff',
+            'padding:1px 4px',
+            'flex-shrink:0',
+            'min-height:22px',
+        ].join(';');
+
+        const cmdLabel = document.createElement('span');
+        cmdLabel.style.cssText = 'color:#ffffff;min-width:8px;';
+        cmdLabel.textContent = '';
+
+        const cmdInput = document.createElement('input');
+        cmdInput.type = 'text';
+        cmdInput.autocomplete = 'off';
+        cmdInput.spellcheck = false;
+        cmdInput.style.cssText = [
+            'flex:1',
+            'background:transparent',
+            'border:none',
+            'outline:none',
+            'color:#ffffff',
+            'font-family:Consolas,"Courier New",monospace',
+            'font-size:14px',
+            'caret-color:#ffffff',
+            'padding:0',
+        ].join(';');
+
+        cmdBar.appendChild(cmdLabel);
+        cmdBar.appendChild(cmdInput);
+
+        viOverlay.appendChild(fileArea);
+        viOverlay.appendChild(statusBar);
+        viOverlay.appendChild(cmdBar);
+        termWindow.appendChild(viOverlay);
+
+        // Focus and scroll to top
+        fileArea.scrollTop = 0;
+        cmdInput.focus();
+
+        // Key handler — real vi behaviour
+        cmdInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                // ESC clears the command line (like real vi)
+                cmdLabel.textContent = '';
+                cmdInput.value = '';
+                e.preventDefault();
+                return;
+            }
+
+            if (e.key === ':' && cmdInput.value === '') {
+                // Show the colon prompt
+                cmdLabel.textContent = ':';
+                e.preventDefault();
+                return;
+            }
+
+            if (e.key === 'Enter') {
+                const cmd = cmdInput.value.trim();
+                if (cmd === 'q' || cmd === 'q!' || cmd === 'wq' || cmd === 'quit') {
+                    // Exit vi — remove overlay, restore terminal
+                    viOverlay.remove();
+                    if (termContent) termContent.style.display = 'flex';
+                    this.addTerminalLine(output, '', 'blank');
+                    createInputLine();
+                } else if (cmd !== '') {
+                    // Unknown command — show error in status bar like real vi
+                    statusBar.textContent = 'E492: Not an editor command: ' + cmdLabel.textContent + cmd;
+                    statusBar.style.background = '#8b0000';
+                    cmdLabel.textContent = '';
+                    cmdInput.value = '';
+                    setTimeout(() => {
+                        statusBar.textContent = '"docker-compose.yml" [readonly]  ' + lines.length + 'L';
+                        statusBar.style.background = '#1a1a6e';
+                    }, 2000);
+                }
+                e.preventDefault();
+                return;
+            }
+
+            // G key — jump to end (like real vi)
+            if (e.key === 'G' && cmdInput.value === '' && cmdLabel.textContent === '') {
+                fileArea.scrollTop = fileArea.scrollHeight;
+                e.preventDefault();
+                return;
+            }
+
+            // gg — jump to top
+            if (e.key === 'g' && cmdInput.value === '' && cmdLabel.textContent === '') {
+                fileArea.scrollTop = 0;
+                e.preventDefault();
+                return;
+            }
+
+            // Arrow keys / Page scroll when not in command mode
+            if (cmdLabel.textContent === '' && cmdInput.value === '') {
+                if (e.key === 'ArrowDown' || e.key === 'j') {
+                    fileArea.scrollTop += 21;
+                    e.preventDefault();
+                } else if (e.key === 'ArrowUp' || e.key === 'k') {
+                    fileArea.scrollTop -= 21;
+                    e.preventDefault();
+                } else if (e.key === 'PageDown' || e.key === 'f') {
+                    fileArea.scrollTop += fileArea.clientHeight;
+                    e.preventDefault();
+                } else if (e.key === 'PageUp' || e.key === 'b') {
+                    fileArea.scrollTop -= fileArea.clientHeight;
+                    e.preventDefault();
+                }
+            }
+        });
+
+        // Show ":q to quit" hint in status bar initially
+        statusBar.textContent = '"docker-compose.yml" [readonly]  ' + lines.length + 'L  --  Type  :q  and Enter to quit';
+    }
+
+        /**
      * Add line to terminal output
      * @param {HTMLElement} output - Output element
      * @param {string} text - Text to add
@@ -1500,70 +2271,16 @@ class DockerTerminal {
     }
 
     /**
-     * Setup window controls (drag, resize, minimize, maximize)
+     * Setup window controls (resize only, no drag)
      * @param {HTMLElement} terminalModal - Terminal modal element
      */
     setupWindowControls(terminalModal) {
         const terminalWindow = document.getElementById('docker-terminal-window');
-        const titlebar = document.getElementById('docker-terminal-titlebar');
-        const minimizeBtn = document.getElementById('docker-terminal-minimize');
-        const maximizeBtn = document.getElementById('docker-terminal-maximize');
         const resizeHandle = document.getElementById('docker-terminal-resize-handle');
 
-        if (!terminalWindow || !titlebar) return;
+        if (!terminalWindow) return;
 
-        // Dragging functionality
-        let isDragging = false;
-        let dragStartX = 0;
-        let dragStartY = 0;
-        let windowStartX = 0;
-        let windowStartY = 0;
-
-        titlebar.addEventListener('mousedown', (e) => {
-            if (e.target.closest('.docker-terminal-btn')) return;
-            if (this.terminalState.isMaximized) return;
-
-            isDragging = true;
-            dragStartX = e.clientX;
-            dragStartY = e.clientY;
-
-            const rect = terminalWindow.getBoundingClientRect();
-            windowStartX = rect.left;
-            windowStartY = rect.top;
-
-            titlebar.style.cursor = 'grabbing';
-            e.preventDefault();
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-
-            const deltaX = e.clientX - dragStartX;
-            const deltaY = e.clientY - dragStartY;
-
-            const newX = windowStartX + deltaX;
-            const newY = windowStartY + deltaY;
-
-            const maxX = window.innerWidth - terminalWindow.offsetWidth;
-            const maxY = window.innerHeight - terminalWindow.offsetHeight;
-
-            this.terminalState.x = Math.max(0, Math.min(newX, maxX));
-            this.terminalState.y = Math.max(0, Math.min(newY, maxY));
-
-            terminalWindow.style.left = this.terminalState.x + 'px';
-            terminalWindow.style.top = this.terminalState.y + 'px';
-            terminalWindow.style.transform = 'none';
-        });
-
-        document.addEventListener('mouseup', () => {
-            if (isDragging) {
-                isDragging = false;
-                titlebar.style.cursor = 'grab';
-                this.saveTerminalState();
-            }
-        });
-
-        // Resizing functionality
+        // Resize from bottom-right handle
         let isResizing = false;
         let resizeStartX = 0;
         let resizeStartY = 0;
@@ -1572,7 +2289,6 @@ class DockerTerminal {
 
         if (resizeHandle) {
             resizeHandle.addEventListener('mousedown', (e) => {
-                if (this.terminalState.isMaximized) return;
                 isResizing = true;
                 resizeStartX = e.clientX;
                 resizeStartY = e.clientY;
@@ -1585,16 +2301,10 @@ class DockerTerminal {
 
         document.addEventListener('mousemove', (e) => {
             if (!isResizing) return;
-
-            const deltaX = e.clientX - resizeStartX;
-            const deltaY = e.clientY - resizeStartY;
-
-            const newWidth = Math.max(400, Math.min(startWidth + deltaX, window.innerWidth - 100));
-            const newHeight = Math.max(300, Math.min(startHeight + deltaY, window.innerHeight - 100));
-
+            const newWidth = Math.max(400, Math.min(startWidth + (e.clientX - resizeStartX), window.innerWidth - 40));
+            const newHeight = Math.max(300, Math.min(startHeight + (e.clientY - resizeStartY), window.innerHeight - 40));
             this.terminalState.width = newWidth;
             this.terminalState.height = newHeight;
-
             terminalWindow.style.width = newWidth + 'px';
             terminalWindow.style.height = newHeight + 'px';
         });
@@ -1605,28 +2315,6 @@ class DockerTerminal {
                 this.saveTerminalState();
             }
         });
-
-        // Minimize button
-        if (minimizeBtn) {
-            minimizeBtn.addEventListener('click', () => {
-                this.minimizeTerminal(terminalWindow);
-            });
-        }
-
-        // Maximize button
-        if (maximizeBtn) {
-            maximizeBtn.addEventListener('click', () => {
-                this.toggleMaximize(terminalWindow);
-            });
-        }
-
-        // Double-click titlebar to maximize/restore
-        titlebar.addEventListener('dblclick', (e) => {
-            if (e.target.closest('.docker-terminal-btn')) return;
-            this.toggleMaximize(terminalWindow);
-        });
-
-        titlebar.style.cursor = 'grab';
     }
 
     /**

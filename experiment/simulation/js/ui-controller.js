@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ============================================
  * UI CONTROLLER
  * ============================================
@@ -869,6 +869,8 @@ class UIController {
 
         console.log('✅ Topology cleared');
         alert('Topology cleared successfully!');
+        // Full refresh ensures complete re-initialization of all managers and UI state
+        window.location.reload();
     }
 
     /**
@@ -1244,14 +1246,11 @@ class UIController {
                 
                 <button class="btn btn-danger btn-block" id="btn-delete-nf" style="margin-top: 15px;">Delete UE</button>
                 
-                <div class="troubleshoot-section">
-                    <h4>🔧 Troubleshoot</h4>
-                    <p class="config-hint">Open Windows-style terminal for network diagnostics</p>
-                    
-                    <button class="btn btn-terminal btn-block" id="btn-open-terminal">
-                        💻 Open Command Prompt
-                    </button>
-                </div>
+                
+                <button class="btn btn-terminal btn-block" id="btn-open-terminal">
+                    💻 Open Command Prompt
+                </button>
+                
             `;
         } else {
             // Standard configuration for other NF types
@@ -1304,14 +1303,11 @@ class UIController {
             </div>
             ` : ''}
             
-            <div class="troubleshoot-section">
-                <h4>🔧 Troubleshoot</h4>
-                <p class="config-hint">Open Windows-style terminal for network diagnostics</p>
-                
-                <button class="btn btn-terminal btn-block" id="btn-open-terminal">
-                    💻 Open Command Prompt
-                </button>
-            </div>
+            
+            <button class="btn btn-terminal btn-block" id="btn-open-terminal">
+                💻 Open Command Prompt
+            </button>
+            
         `;
         }
 
@@ -2445,21 +2441,11 @@ class UIController {
                         Command Prompt - ${nf.name} (${nf.config.ipAddress})
                     </div>
                     <div class="terminal-controls">
-                        <button class="terminal-btn minimize">−</button>
-                        <button class="terminal-btn maximize">□</button>
                         <button class="terminal-btn close" id="terminal-close">×</button>
                     </div>
                 </div>
                 <div class="windows-terminal-content" id="terminal-content">
-                    <div class="terminal-header">
-                        Microsoft Windows [Version 10.0.19045.3570]<br>
-                        (c) Microsoft Corporation. All rights reserved.<br><br>
-                    </div>
                     <div class="terminal-output" id="terminal-output"></div>
-                    <div class="terminal-input-line">
-                        <span class="terminal-prompt">C:\\${nf.name}></span>
-                        <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false">
-                    </div>
                 </div>
             </div>
         `;
@@ -2473,12 +2459,6 @@ class UIController {
         setTimeout(() => {
             terminalModal.classList.add('show');
         }, 10);
-
-        // Focus on input
-        const input = document.getElementById('terminal-input');
-        if (input) {
-            input.focus();
-        }
     }
 
     /**
@@ -2488,12 +2468,14 @@ class UIController {
      */
     setupWindowsTerminal(nf, terminalModal) {
         const win = terminalModal.querySelector('.windows-terminal-window');
-        const input = terminalModal.querySelector('#terminal-input');
         const output = terminalModal.querySelector('#terminal-output');
+        const content = terminalModal.querySelector('#terminal-content');
         const closeBtn = terminalModal.querySelector('#terminal-close');
         
         let commandHistory = [];
         let historyIndex = -1;
+        let currentInput = null;
+        let currentInputLine = null;
 
         // Close button - cleanup iperf3 server if running
         closeBtn.addEventListener('click', () => {
@@ -2506,25 +2488,6 @@ class UIController {
             setTimeout(() => {
                 terminalModal.remove();
             }, 300);
-        });
-
-        // Make window draggable by titlebar
-        const titlebar = terminalModal.querySelector('.windows-terminal-titlebar');
-        let dragging = false, dx = 0, dy = 0;
-        titlebar.addEventListener('mousedown', (e) => {
-            dragging = true;
-            dx = e.clientX - win.offsetLeft;
-            dy = e.clientY - win.offsetTop;
-            document.body.style.userSelect = 'none';
-        });
-        document.addEventListener('mousemove', (e) => {
-            if (!dragging) return;
-            win.style.left = `${e.clientX - dx}px`;
-            win.style.top = `${e.clientY - dy}px`;
-        });
-        document.addEventListener('mouseup', () => {
-            dragging = false;
-            document.body.style.userSelect = '';
         });
 
         // Resizer (bottom-right)
@@ -2554,54 +2517,174 @@ class UIController {
             resizing = false;
         });
 
-        // Input handling
-        input.addEventListener('keydown', async (e) => {
+        // Focus on terminal click
+        content.addEventListener('click', (e) => {
+            if (currentInput && !this.iperf3Servers.has(nf.id)) {
+                currentInput.focus();
+            }
+        });
+
+        // Create input line
+        const createInputLine = () => {
+            // Remove existing input line if any
+            if (currentInputLine) {
+                currentInputLine.remove();
+            }
+
+            // Create new input line
+            const inputLine = document.createElement('div');
+            inputLine.className = 'terminal-input-line';
+            inputLine.innerHTML = `
+                <span class="terminal-prompt">C:\\${nf.name}></span>
+                <input type="text" class="terminal-input" autocomplete="off" spellcheck="false">
+            `;
+            output.appendChild(inputLine);
+            
+            currentInputLine = inputLine;
+            currentInput = inputLine.querySelector('.terminal-input');
+            
+            // Setup input event handlers
+            currentInput.addEventListener('keydown', handleInputKeydown);
+            
+            // Focus the input
+            currentInput.focus();
+            
+            // Scroll to bottom
+            content.scrollTop = content.scrollHeight;
+            
+            return currentInput;
+        };
+
+        // Handle input keydown events
+        const handleInputKeydown = async (e) => {
             // Handle Ctrl+C to stop iperf3 server
             if (e.ctrlKey && e.key === 'c' && this.iperf3Servers.has(nf.id)) {
                 e.preventDefault();
                 this.stopIperf3Server(nf, output);
-                input.value = '';
+                createInputLine();
                 return;
             }
             
             if (e.key === 'Enter') {
-                const command = input.value.trim();
+                const command = e.target.value.trim();
+                
+                // Move input line content to output as a regular line
+                const commandLine = document.createElement('div');
+                commandLine.className = 'terminal-line terminal-command';
+                commandLine.textContent = `C:\\${nf.name}>${e.target.value}`;
+                
+                // Replace input line with command line
+                if (currentInputLine) {
+                    currentInputLine.replaceWith(commandLine);
+                }
+                
+                currentInputLine = null;
+                currentInput = null;
+                
                 if (command) {
                     // Add to history
                     commandHistory.push(command);
                     historyIndex = commandHistory.length;
 
-                    // Display command
-                    this.addTerminalLine(output, `C:\\${nf.name}>${command}`, 'command');
-                    
-                    // Clear input
-                    input.value = '';
-
                     // Process command
                     await this.processWindowsCommand(nf, command, output);
+                }
+                
+                // Create new input line after command execution
+                if (!this.iperf3Servers.has(nf.id)) {
+                    createInputLine();
                 }
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 if (historyIndex > 0) {
                     historyIndex--;
-                    input.value = commandHistory[historyIndex];
+                    e.target.value = commandHistory[historyIndex];
+                    // Move cursor to end
+                    setTimeout(() => {
+                        e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+                    }, 0);
                 }
             } else if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 if (historyIndex < commandHistory.length - 1) {
                     historyIndex++;
-                    input.value = commandHistory[historyIndex];
+                    e.target.value = commandHistory[historyIndex];
                 } else {
                     historyIndex = commandHistory.length;
-                    input.value = '';
+                    e.target.value = '';
+                }
+                        } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const val = e.target.value;
+                if (!val.length) return;
+
+                const allNFs = window.dataStore ? window.dataStore.getAllNFs() : [];
+                const nfIPs = allNFs.map(n => n.config.ipAddress).filter(Boolean);
+
+                const baseCommands = [
+                    'help', 'cls', 'clear', 'exit',
+                    'ifconfig', 'systeminfo', 'netstat',
+                    'ping ',
+                    'ping subnet',
+                    'iperf3 -s',
+                    'iperf3 -c ',
+                ];
+                const pingTargets = nfIPs.map(ip => `ping ${ip}`);
+                const iperf3Targets = nfIPs.map(ip => `iperf3 -c ${ip}`);
+                const commands = [...baseCommands, ...pingTargets, ...iperf3Targets];
+
+                                const matches = commands.filter(c => c.toLowerCase().startsWith(val.toLowerCase()));
+
+                if (matches.length === 0) {
+                    e.target.style.opacity = '0.3';
+                    setTimeout(() => { e.target.style.opacity = '1'; }, 120);
+                } else if (matches.length === 1) {
+                    e.target.value = matches[0];
+                } else {
+                    const lcp = matches.reduce((prefix, cmd) => {
+                        let i = 0;
+                        while (i < prefix.length && i < cmd.length &&
+                               prefix[i].toLowerCase() === cmd[i].toLowerCase()) i++;
+                        return prefix.slice(0, i);
+                    });
+
+                    if (lcp.length > val.length) {
+                        e.target.value = lcp;
+                    } else {
+                        const cmdLine = document.createElement('div');
+                        cmdLine.className = 'terminal-line terminal-command';
+                        cmdLine.textContent = 'C:\\' + nf.name + '>' + val;
+                        if (currentInputLine) currentInputLine.replaceWith(cmdLine);
+                        currentInputLine = null;
+                        currentInput = null;
+
+                        const nextTokens = [...new Set(matches.map(m => {
+                            const rest = m.slice(val.length);
+                            const nextWord = rest.trimStart().split(' ')[0];
+                            return nextWord || rest.trim();
+                        }).filter(Boolean))];
+
+                        const colW = Math.max(...nextTokens.map(t => t.length)) + 4;
+                        const cols = Math.max(1, Math.floor(80 / colW));
+                        for (let i = 0; i < nextTokens.length; i += cols) {
+                            const row = nextTokens.slice(i, i + cols).map(t => t.padEnd(colW)).join('');
+                            this.addTerminalLine(output, row, 'info');
+                        }
+
+                        createInputLine();
+                        currentInput.value = val;
+                    }
                 }
             }
-        });
+        };
 
         // Initial welcome message
         this.addTerminalLine(output, `Connected to ${nf.name} (${nf.config.ipAddress})`, 'info');
         this.addTerminalLine(output, 'Type "help" for available commands.', 'info');
         this.addTerminalLine(output, '', 'blank');
+        
+        // Create initial input line
+        createInputLine();
     }
 
     /**
@@ -2611,42 +2694,40 @@ class UIController {
      * @param {HTMLElement} output - Output element
      */
     async processWindowsCommand(nf, command, output) {
-        const cmd = command.toLowerCase().trim();
-        const args = command.split(' ');
+    const cmd = command.toLowerCase().trim();
+    const args = command.split(' ');
 
-        if (cmd === 'help' || cmd === '?') {
-            this.showWindowsHelp(output);
-        } else if (cmd === 'ipconfig') {
-            this.showIPConfig(nf, output);
-        } else if (cmd.startsWith('ping ')) {
-            // Parse ping command with -I and -c options
-            await this.executeLinuxPing(nf, command, output);
-        } else if (cmd === 'ping subnet') {
-            await this.executeWindowsPingSubnet(nf, output);
-        } else if (cmd === 'cls' || cmd === 'clear') {
-            output.innerHTML = '';
-        } else if (cmd === 'exit') {
-            const closeBtn = document.getElementById('terminal-close');
-            if (closeBtn) closeBtn.click();
-        } else if (cmd === 'dir') {
-            this.showDirectory(output);
-        } else if (cmd === 'systeminfo') {
-            this.showSystemInfo(nf, output);
-        } else if (cmd === 'netstat') {
-            this.showNetstat(nf, output);
-        } else if (cmd === 'ifconfig' || cmd === 'ip addr') {
-            this.showIfConfig(nf, output);
-        } else if (cmd.startsWith('iperf3 ')) {
-            await this.processIperf3Command(nf, command, output);
-        } else if (cmd === '') {
-            // Empty command, just show prompt
-        } else {
-            this.addTerminalLine(output, `'${command}' is not recognized as an internal or external command,`, 'error');
-            this.addTerminalLine(output, 'operable program or batch file.', 'error');
-        }
-
-        this.addTerminalLine(output, '', 'blank');
+    if (cmd === 'help' || cmd === '?') {
+        this.showWindowsHelp(output);
+    } else if (cmd === 'ifconfig') {
+        this.showifconfig(nf, output);
+    } else if (cmd.startsWith('ping ')) {
+        // Parse ping command with -I and -c options
+        await this.executeLinuxPing(nf, command, output);
+    } else if (cmd === 'ping subnet') {
+        await this.executeWindowsPingSubnet(nf, output);
+    } else if (cmd === 'cls' || cmd === 'clear') {
+        output.innerHTML = '';
+    } else if (cmd === 'exit') {
+        const closeBtn = document.getElementById('terminal-close');
+        if (closeBtn) closeBtn.click();
+    } else if (cmd === 'systeminfo') {
+        this.showSystemInfo(nf, output);
+    } else if (cmd === 'netstat') {
+        this.showNetstat(nf, output);
+    } else if (cmd === 'ifconfig' || cmd === 'ip addr') {
+        this.showIfConfig(nf, output);
+    } else if (cmd.startsWith('iperf3 ')) {
+        await this.processIperf3Command(nf, command, output);
+    } else if (cmd === '') {
+        // Empty command, just show prompt
+    } else {
+        this.addTerminalLine(output, `'${command}' is not recognized as an internal or external command,`, 'error');
+        this.addTerminalLine(output, 'operable program or batch file.', 'error');
     }
+
+    this.addTerminalLine(output, '', 'blank');
+}
 
     /**
      * Add line to terminal output
@@ -2673,13 +2754,9 @@ class UIController {
             'Available commands:',
             '',
             'HELP        - Display this help message',
-            'IPCONFIG    - Display network configuration (Windows style)',
+            'ifconfig    - Display network configuration (Windows style)',
             'IFCONFIG    - Display network interfaces (Linux style)',
             'PING        - Test network connectivity',
-            '  Format:   ping -I <interface> <target> [-c<count>]',
-            '  Examples: ping -I oaitun_ue1 8.8.8.8 -c4',
-            '            ping -I oaitun_ue1 10.0.0.1 -c8',
-            '            ping -I oaitun_ue1 12.45.0.39 -c4',
             '  Note:     -c4 = 4 replies, -c8 = 8 replies',
             '            No -c = continuous ping (not recommended)',
             'IPERF3      - Network throughput testing',
@@ -2702,7 +2779,7 @@ class UIController {
      * @param {Object} nf - Network Function
      * @param {HTMLElement} output - Output element
      */
-    showIPConfig(nf, output) {
+    showifconfig(nf, output) {
         const lines = [
             'Windows IP Configuration',
             '',

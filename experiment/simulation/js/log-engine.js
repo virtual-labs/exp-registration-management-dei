@@ -258,12 +258,12 @@ class LogEngine {
         // FINAL STATUS
         // ==================================
         if (scenario.final_status) {
-            const depInfo = this.dependencies[nf.type];
+            const depInfo = this.dependencies?.[nf.type];
             let hasErrors = false;
             let hasWarnings = false;
 
             // Check all required dependencies
-            depInfo.required.forEach(reqType => {
+            (depInfo?.required || []).forEach(reqType => {
                 const exists = this.checkNFTypeExists(reqType);
                 const isConnected = this.hasConnectionToType(nf, reqType);
                 if (!exists || !isConnected) {
@@ -272,7 +272,7 @@ class LogEngine {
             });
 
             // Check optional dependencies
-            depInfo.optional.forEach(optType => {
+            (depInfo?.optional || []).forEach(optType => {
                 const exists = this.checkNFTypeExists(optType);
                 const isConnected = this.hasConnectionToType(nf, optType);
                 if (!exists || !isConnected) {

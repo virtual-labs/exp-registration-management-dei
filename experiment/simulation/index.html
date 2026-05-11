@@ -15,17 +15,17 @@
         <!-- Top Toolbar -->
         <div class="toolbar">
             <div class="toolbar-left">
-                <h1>🌐 Registration Management Dashboard</h1>
+                <h1>🌐 Registration Management</h1>
             </div>
             <div class="toolbar-right">
                 <!-- Main action buttons -->
-                <button id="btn-one-click" class="btn btn-success">🚀 One-Click Deploy</button>
-                <button id="btn-add-nf" class="btn btn-primary">➕ Add NF</button>
                 <button id="btn-nas" class="btn btn-primary">📡 NAS</button>
-                <button id="btn-docker-terminal" class="btn btn-primary">🐳 Docker Terminal</button>
+                <button id="btn-one-click" class="btn btn-success">🚀 One-Click Deploy</button>
+                <button id="btn-docker-terminal" class="btn btn-primary">🐳 Terminal</button>
+                <button id="btn-add-nf" class="btn btn-primary">➕ Add NF</button>
                 <button id="btn-clear" class="btn btn-danger">🗑️ Clears</button>
                 <button id="btn-validate" class="btn btn-info">✓ Validate</button>
-     
+                <button id="btn-help" class="btn btn-help-toolbar">❓ Help</button>
             </div>
         </div>
 
@@ -148,39 +148,22 @@
     <!-- Help Modal -->
     <div id="help-modal" class="modal" style="display:none;">
         <div class="modal-content help-modal-content">
-            <h2>📚 5G Service-Based Architecture Guide</h2>
+            <h2>📚 5G SBA Simulation — Help</h2>
             <div class="help-content">
                 <div class="help-section">
-                    <h3>🏗️ Reference Architecture</h3>
-                    <div class="architecture-diagram">
-                        <img id="sba-diagram" src="images/sba/sba.jpg" alt="5G Service-Based Architecture"
-                            style="width: 100%; max-width: 800px; height: auto; background: #1a252f; border-radius: 8px;">
-                    </div>
-                </div>
-
-                <div class="help-section">
-                    <h3>🚀 Quick Start Guide</h3>
+                    <h3>🚀 Simulation Steps</h3>
                     <ol class="help-steps">
-                        <li><strong>Create Service Buses:</strong> Click "📊 Add Bus Line" to create Control Plane and
-                            User Plane buses</li>
-                        <li><strong>Add Network Functions:</strong> Click "➕ Add NF" to add AMF, SMF, UPF, etc.</li>
-                        <li><strong>Connect Components:</strong> Use "Select Source" → "Select Destination" to connect
-                            NFs to buses</li>
-                        <li><strong>Validate Topology:</strong> Click "✓ Validate" to check your 5G network design</li>
+                        <li>Open <strong>Docker Terminal</strong> → run <code>docker compose -f docker-compose.yml up -d</code> to deploy the core network (AMF, SMF, UPF, NRF, etc.).</li>
+                        <li>Deploy the gNB → <code>docker compose -f docker-compose-gnb.yml up -d</code></li>
+                        <li>Deploy UEs → <code>docker compose -f docker-compose-ue.yml up -d</code></li>
+                        <li>Monitor all services → <code>watch docker compose -f docker-compose.yml ps -a</code></li>
+                        <li>Click <strong>NAS</strong> button to step through the 5G UE registration procedure.</li>
+                        <li>Click <strong>Validate</strong> to verify your network topology is correctly configured.</li>
+                        <li>Tear down core network → <code>docker compose -f docker-compose.yml down</code></li>
                     </ol>
                 </div>
-
-                <div class="help-section">
-                    <h3>🔗 Connection Types</h3>
-                    <ul class="help-list">
-                        <li><span class="connection-type nf-bus">NF → Bus:</span> Connect Network Functions to Service
-                            Buses</li>
-                        <li><span class="connection-type bus-nf">Bus → NF:</span> Connect Service Buses to Network
-                            Functions</li>
-                        <li><span class="connection-type bus-bus">Bus → Bus:</span> Create bridges between different
-                            service buses</li>
-                        <li><span class="connection-type nf-nf">NF → NF:</span> Direct point-to-point connections</li>
-                    </ul>
+                <div class="help-section help-section-link">
+                    <a href="../procedure.html" target="_blank" class="help-procedure-link">For More Detailes...📄 View Full Procedures</a>
                 </div>
             </div>
             <button id="help-close" class="btn btn-primary btn-block">Close</button>

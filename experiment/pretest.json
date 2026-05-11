@@ -1,8 +1,11 @@
 {
   "version": 2.0,
+  "filters": {
+    "difficulty": ["beginner", "intermediate"]
+  },
   "questions": [
     {
-      "question": "What is the primary purpose of Registration Management in a 5G SA network?",
+      "question": "Q1. What is the primary purpose of Registration Management in a 5G SA network?",
       "answers": {
         "a": "To allocate radio frequencies",
         "b": "To provide authorized access to network services",
@@ -19,7 +22,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which 5G Core Network Function terminates NAS signaling from the UE?",
+      "question": "Q2. Which 5G Core Network Function terminates NAS signaling from the UE?",
       "answers": {
         "a": "SMF",
         "b": "UPF",
@@ -36,7 +39,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which identifier protects the permanent subscriber identity over the air?",
+      "question": "Q3. Which identifier protects the permanent subscriber identity over the air?",
       "answers": {
         "a": "SUPI",
         "b": "IMEI",
@@ -53,7 +56,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which protocol carries NAS messages between the UE and gNB?",
+      "question": "Q4. Which protocol carries NAS messages between the UE and gNB?",
       "answers": {
         "a": "NGAP",
         "b": "RRC",
@@ -67,10 +70,10 @@
         "d": "Incorrect. SCTP is used on the N2 interface."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "Which NAS message initiates the registration procedure?",
+      "question": "Q5. Which NAS message initiates the registration procedure?",
       "answers": {
         "a": "Registration Complete",
         "b": "Registration Accept",
@@ -87,7 +90,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which network function performs subscriber authentication?",
+      "question": "Q6. Which network function performs subscriber authentication?",
       "answers": {
         "a": "UDM",
         "b": "AUSF",
@@ -104,7 +107,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What is established by the Security Mode Command?",
+      "question": "Q7. What is established by the Security Mode Command?",
       "answers": {
         "a": "Radio bearers",
         "b": "Integrity protection and ciphering",
@@ -121,7 +124,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which identifier is assigned by the AMF to protect user privacy after registration?",
+      "question": "Q8. Which identifier is assigned by the AMF to protect user privacy after registration?",
       "answers": {
         "a": "SUPI",
         "b": "IMEI",
@@ -138,7 +141,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What triggers a Mobility Registration Update?",
+      "question": "Q9. What triggers a Mobility Registration Update?",
       "answers": {
         "a": "UE power-on",
         "b": "Expiry of authentication keys",
@@ -152,10 +155,10 @@
         "d": "Incorrect. Slice changes do not trigger mobility updates."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "Which interface is used between gNB and AMF?",
+      "question": "Q10. Which interface is used between gNB and AMF?",
       "answers": {
         "a": "N1",
         "b": "N2",
@@ -172,7 +175,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which data is retrieved from UDM during initial registration?",
+      "question": "Q11. Which data is retrieved from UDM during initial registration?",
       "answers": {
         "a": "Radio configuration",
         "b": "Authentication vectors and subscription data",
@@ -186,10 +189,10 @@
         "d": "Incorrect. Paging is managed by AMF."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "What does TAI stand for in the context of mobility?",
+      "question": "Q12. What does TAI stand for in the context of mobility?",
       "answers": {
         "a": "Temporary Access Identifier",
         "b": "Tracking Area Identity",
@@ -197,16 +200,16 @@
         "d": "Traffic Area Interface"
       },
       "explanations": {
-        "a": "Incorrect. This term is not defined in 5G.",
-        "b": "Correct. TAI identifies tracking areas.",
-        "c": "Incorrect. Authorization indices are unrelated.",
-        "d": "Incorrect. This term does not exist in 5G."
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
       },
       "correctAnswer": "b",
       "difficulty": "beginner"
     },
     {
-      "question": "Which registration type is used when the UE has no valid registration context?",
+      "question": "Q13. Which registration type is used when the UE has no valid registration context?",
       "answers": {
         "a": "Periodic Registration",
         "b": "Mobility Registration",
@@ -214,16 +217,16 @@
         "d": "Emergency Registration"
       },
       "explanations": {
-        "a": "Incorrect. Periodic registration refreshes context.",
-        "b": "Incorrect. Mobility registration updates location.",
-        "c": "Correct. Initial registration is used without existing context.",
-        "d": "Incorrect. Emergency registration is a special case."
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
       },
       "correctAnswer": "c",
       "difficulty": "beginner"
     },
     {
-      "question": "Which timer triggers Periodic Registration Update?",
+      "question": "Q14. Which timer triggers Periodic Registration Update?",
       "answers": {
         "a": "T300",
         "b": "T3512",
@@ -231,16 +234,16 @@
         "d": "T3550"
       },
       "explanations": {
-        "a": "Incorrect. T300 is an RRC timer.",
-        "b": "Correct. T3512 triggers periodic registration.",
-        "c": "Incorrect. T3324 is used for idle mode behavior.",
-        "d": "Incorrect. T3550 relates to session management."
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "Which message confirms successful registration to the network?",
+      "question": "Q15. Which message confirms successful registration to the network?",
       "answers": {
         "a": "Registration Accept",
         "b": "Security Mode Complete",
@@ -248,13 +251,13 @@
         "d": "Authentication Response"
       },
       "explanations": {
-        "a": "Incorrect. This message is sent by the network.",
-        "b": "Incorrect. This confirms security activation.",
-        "c": "Correct. Registration Complete finalizes the procedure.",
-        "d": "Incorrect. This is part of authentication."
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
       },
       "correctAnswer": "c",
       "difficulty": "beginner"
     }
   ]
-}
+} 

@@ -1,260 +1,263 @@
 {
   "version": 2.0,
+  "filters": {
+    "difficulty": ["beginner", "intermediate"]
+  },
   "questions": [
     {
-      "question": "What is the first visible indication that the core network has been successfully deployed using One-Click Deploy?",
+      "question": "Q1. What is the first visible indication that the core network has been successfully deployed using One-Click Deploy?",
       "answers": {
         "a": "UE sends Registration Request",
         "b": "All network functions appear sequentially in the topology",
         "c": "NAS messages start flowing automatically",
         "d": "gNB broadcasts SIB1"
       },
-      "explanations": {
-        "a": "Incorrect. Registration starts later in the procedure.",
-        "b": "Correct. Network functions are deployed one by one after clearing the topology.",
-        "c": "Incorrect. NAS messages require manual step execution.",
-        "d": "Incorrect. SIB broadcasting is not shown in this deployment step."
-      },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "Which action switches the interface into the NAS Registration experiment mode?",
+      "question": "Q2. Which action switches the interface into the NAS Registration experiment mode?",
       "answers": {
         "a": "Deploying the gNB",
         "b": "Clicking the NAS button in the top toolbar",
         "c": "Starting the UE",
         "d": "Opening the message inspector panel"
       },
-      "explanations": {
-        "a": "Incorrect. gNB deployment alone does not change the interface mode.",
-        "b": "Correct. The NAS button enables the NAS Registration experiment mode.",
-        "c": "Incorrect. UE startup does not control the interface mode.",
-        "d": "Incorrect. The inspector panel opens automatically in NAS mode."
-      },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "Where are the JSON contents of NAS messages displayed during the experiment?",
+      "question": "Q3. Where are the JSON contents of NAS messages displayed during the experiment?",
       "answers": {
         "a": "Right panel",
         "b": "Topology view",
         "c": "Left panel",
         "d": "Bottom status bar"
       },
-      "explanations": {
-        "a": "Incorrect. The right panel lists procedural steps.",
-        "b": "Incorrect. The topology view shows network elements.",
-        "c": "Correct. The left panel displays NAS message JSON details.",
-        "d": "Incorrect. The status bar only shows alerts."
-      },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "Which identifier is observed in the Registration Request message during Step 1?",
+      "question": "Q4. Which identifier is observed in the Registration Request message during Step 1?",
       "answers": {
         "a": "SUPI",
         "b": "IMEI",
         "c": "SUCI",
         "d": "5G-GUTI"
       },
-      "explanations": {
-        "a": "Incorrect. SUPI is not sent initially for privacy reasons.",
-        "b": "Incorrect. IMEI is not used for registration identity.",
-        "c": "Correct. SUCI is included to conceal the SUPI.",
-        "d": "Incorrect. 5G-GUTI is assigned later."
-      },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "Which step involves the AMF requesting the UE’s permanent identity?",
+      "question": "Q5. Which step involves the AMF requesting the UE’s permanent identity?",
       "answers": {
         "a": "Registration Request",
         "b": "Identity Request",
         "c": "Authentication Request",
         "d": "Security Mode Command"
       },
-      "explanations": {
-        "a": "Incorrect. This message initiates registration.",
-        "b": "Correct. Identity Request asks for SUPI/IMSI.",
-        "c": "Incorrect. Authentication uses identity already obtained.",
-        "d": "Incorrect. Security Mode Command activates security."
-      },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "Which network function generates authentication vectors such as RAND and AUTN?",
+      "question": "Q6. Which network function generates authentication vectors such as RAND and AUTN?",
       "answers": {
         "a": "AMF",
         "b": "AUSF",
         "c": "UDM",
         "d": "PCF"
       },
-      "explanations": {
-        "a": "Incorrect. AMF coordinates authentication.",
-        "b": "Incorrect. AUSF requests vectors but does not generate them.",
-        "c": "Correct. UDM generates authentication vectors.",
-        "d": "Incorrect. PCF handles policies."
-      },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "At which step does the UE validate network authenticity?",
+      "question": "Q7. At which step does the UE validate network authenticity?",
       "answers": {
         "a": "Identity Response",
         "b": "NAS Authentication Request",
         "c": "Security Mode Complete",
         "d": "Registration Accept"
       },
-      "explanations": {
-        "a": "Incorrect. This step only provides identity.",
-        "b": "Correct. UE validates AUTN during authentication challenge.",
-        "c": "Incorrect. Security is already validated by this point.",
-        "d": "Incorrect. Registration has already succeeded."
-      },
       "correctAnswer": "b",
-      "difficulty": "intermediate"
+      "difficulty": "intermediate",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "Which value does the UE compute and return to prove its identity?",
+      "question": "Q8. Which value does the UE compute and return to prove its identity?",
       "answers": {
         "a": "AUTN",
         "b": "RAND",
         "c": "RES*",
         "d": "K_SEAF"
       },
-      "explanations": {
-        "a": "Incorrect. AUTN is generated by the network.",
-        "b": "Incorrect. RAND is a challenge value.",
-        "c": "Correct. RES* is computed by the UE and sent back.",
-        "d": "Incorrect. K_SEAF is not sent to the UE."
-      },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "Which message activates NAS encryption and integrity protection?",
+      "question": "Q9. Which message activates NAS encryption and integrity protection?",
       "answers": {
         "a": "Authentication Response",
         "b": "Security Mode Command",
         "c": "Security Mode Complete",
         "d": "Registration Accept"
       },
-      "explanations": {
-        "a": "Incorrect. This message proves subscriber identity.",
-        "b": "Correct. Security Mode Command activates NAS security.",
-        "c": "Incorrect. This confirms security activation.",
-        "d": "Incorrect. Registration Accept carries registration parameters."
-      },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "After which step are all NAS messages encrypted and integrity protected?",
+      "question": "Q10. After which step are all NAS messages encrypted and integrity protected?",
       "answers": {
         "a": "Authentication Request",
         "b": "Security Mode Command",
         "c": "Security Mode Complete",
         "d": "Registration Complete"
       },
-      "explanations": {
-        "a": "Incorrect. Authentication does not activate security.",
-        "b": "Incorrect. Security is activated but not yet confirmed.",
-        "c": "Correct. Security Mode Complete confirms active protection.",
-        "d": "Incorrect. Security is already active by this stage."
-      },
       "correctAnswer": "c",
-      "difficulty": "intermediate"
+      "difficulty": "intermediate",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "Which message assigns the temporary identity 5G-GUTI to the UE?",
+      "question": "Q11. Which message assigns the temporary identity 5G-GUTI to the UE?",
       "answers": {
         "a": "Registration Request",
         "b": "Identity Response",
         "c": "Registration Accept",
         "d": "Registration Complete"
       },
-      "explanations": {
-        "a": "Incorrect. This message initiates registration.",
-        "b": "Incorrect. This provides permanent identity.",
-        "c": "Correct. Registration Accept contains the 5G-GUTI.",
-        "d": "Incorrect. This only acknowledges completion."
-      },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "What is the purpose of the Registration Complete message?",
+      "question": "Q12. What is the purpose of the Registration Complete message?",
       "answers": {
         "a": "To authenticate the UE",
         "b": "To activate security",
         "c": "To acknowledge successful registration",
         "d": "To request subscription data"
       },
-      "explanations": {
-        "a": "Incorrect. Authentication occurs earlier.",
-        "b": "Incorrect. Security is already active.",
-        "c": "Correct. Registration Complete confirms successful registration.",
-        "d": "Incorrect. Subscription data is retrieved by AMF."
-      },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "How many interactive steps are executed in the NAS Registration experiment panel?",
+      "question": "Q13. How many interactive steps are executed in the NAS Registration experiment panel?",
       "answers": {
         "a": "10",
         "b": "11",
         "c": "12",
         "d": "13"
       },
-      "explanations": {
-        "a": "Incorrect. The procedure includes more steps.",
-        "b": "Incorrect. This does not match the displayed flow.",
-        "c": "Incorrect. One additional step completes the flow.",
-        "d": "Correct. The experiment consists of 13 steps."
-      },
       "correctAnswer": "d",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Incorrect.",
+        "d": "Correct."
+      }
     },
     {
-      "question": "Which component forwards NAS messages between the UE and the AMF?",
+      "question": "Q14. Which component forwards NAS messages between the UE and the AMF?",
       "answers": {
         "a": "UDM",
         "b": "UPF",
         "c": "gNB",
         "d": "PCF"
       },
-      "explanations": {
-        "a": "Incorrect. UDM stores subscriber data.",
-        "b": "Incorrect. UPF handles user-plane traffic.",
-        "c": "Correct. gNB forwards NAS messages transparently.",
-        "d": "Incorrect. PCF provides policies."
-      },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "At the end of Step 13, what is the UE’s operational state?",
+      "question": "Q15. At the end of Step 13, what is the UE’s operational state?",
       "answers": {
         "a": "Deregistered and idle",
         "b": "Authenticated but not registered",
         "c": "Registered, authenticated, and secure",
         "d": "Connected only at radio level"
       },
-      "explanations": {
-        "a": "Incorrect. Registration has completed successfully.",
-        "b": "Incorrect. Registration is already finalized.",
-        "c": "Correct. UE is fully registered, authenticated, and secure.",
-        "d": "Incorrect. Core network access is fully established."
-      },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
     }
   ]
 }

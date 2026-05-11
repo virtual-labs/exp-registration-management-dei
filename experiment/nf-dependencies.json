@@ -293,5 +293,16 @@
       "Create database tables (subscribers, credentials, profiles)"
     ],
     "errors": {}
+  },
+  "ext-dn": {
+    "name": "External Data Network",
+    "required": [],
+    "optional": ["UPF"],
+    "description": "External data network gateway connected to UPF via N6 interface",
+    "startupChecks": [
+      "Initialize external network services",
+      "Verify N6 interface toward UPF"
+    ],
+    "errors": {}
   }
 }

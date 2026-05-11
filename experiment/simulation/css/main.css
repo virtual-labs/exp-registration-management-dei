@@ -828,6 +828,55 @@ button:disabled {
     background: var(--accent-blue);
     color: white;
 }
+
+.btn-help-toolbar {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+.btn-help-toolbar:hover {
+    background: var(--accent-blue);
+    color: white;
+}
+
+.help-section-link {
+    text-align: center;
+    border-left-color: var(--accent-green);
+}
+
+.help-section-link p {
+    margin-bottom: 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.help-procedure-link {
+    display: inline-block;
+    padding: 10px 24px;
+    background: var(--accent-blue);
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.help-procedure-link:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+}
+
+.help-steps code {
+    background: rgba(52, 152, 219, 0.15);
+    color: #74b9ff;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+}
 /* ==
 ==========================================
    New Configuration Panel Styles
@@ -1250,13 +1299,13 @@ button:disabled {
 .windows-terminal-window {
     width: 800px;
     height: 600px;
-    background: #000000;
-    border: 2px solid #404040;
+    background: #0c0c0c;
+    border: 1px solid #333333;
     border-radius: 8px 8px 0 0;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.9);
     display: flex;
     flex-direction: column;
-    font-family: 'Consolas', 'Courier New', monospace;
+    font-family: 'Consolas', 'Courier New', 'Lucida Console', monospace;
     transform: scale(0.9);
     transition: transform 0.3s ease;
     pointer-events: auto;
@@ -1267,21 +1316,21 @@ button:disabled {
 }
 
 .windows-terminal-titlebar {
-    background: linear-gradient(to bottom, #404040, #2a2a2a);
-    height: 30px;
+    background: #1f1f1f;
+    height: 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 12px;
     border-radius: 6px 6px 0 0;
-    border-bottom: 1px solid #1a1a1a;
+    border-bottom: 1px solid #333333;
     cursor: move;
 }
 
 .terminal-title {
-    color: #ffffff;
+    color: #cccccc;
     font-size: 12px;
-    font-weight: normal;
+    font-weight: 400;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1339,36 +1388,39 @@ button:disabled {
 .windows-terminal-content {
     flex: 1;
     background: #000000;
-    color: #00ff00;
-    padding: 10px;
+    color: #ffffff;
+    padding: 8px 12px;
     overflow-y: auto;
     font-size: 14px;
-    line-height: 1.2;
+    line-height: 1.5;
     display: flex;
     flex-direction: column;
+    font-family: 'Consolas', 'Courier New', 'Lucida Console', monospace;
 }
 
 .terminal-header {
-    color: #ffffff;
-    margin-bottom: 10px;
-    font-size: 13px;
+    color: #7d8590;
+    margin-bottom: 8px;
+    font-size: 12px;
 }
 
 .terminal-output {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 10px;
+    margin-bottom: 0;
 }
 
 .terminal-line {
-    margin: 2px 0;
+    margin: 0;
     white-space: pre-wrap;
     word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 21px;
 }
 
 .terminal-command {
     color: #ffffff;
-    font-weight: bold;
 }
 
 .terminal-info {
@@ -1376,11 +1428,11 @@ button:disabled {
 }
 
 .terminal-success {
-    color: #00ff00;
+    color: #f4f8f7;
 }
 
 .terminal-error {
-    color: #ff6b6b;
+    color: #f14c4c;
 }
 
 .terminal-blank {
@@ -1390,16 +1442,18 @@ button:disabled {
 .terminal-input-line {
     display: flex;
     align-items: center;
-    background: #000000;
-    border-top: 1px solid #333333;
-    padding-top: 5px;
+    background: transparent;
+    border-top: none;
+    padding-top: 0;
+    margin-top: 2px;
 }
 
 .terminal-prompt {
-    color: #ffffff;
-    margin-right: 5px;
-    font-weight: bold;
+    color: #f3f5f4;
+    margin-right: 8px;
+    font-weight: 600;
     white-space: nowrap;
+    font-size: 14px;
 }
 
 .terminal-input {
@@ -1407,15 +1461,36 @@ button:disabled {
     background: transparent;
     border: none;
     color: #ffffff;
-    font-family: 'Consolas', 'Courier New', monospace;
+    font-family: 'Consolas', 'Courier New', 'Lucida Console', monospace;
     font-size: 14px;
     outline: none;
     caret-color: #ffffff;
+    padding: 0;
+    margin: 0;
+    width: 100%;
 }
 
 .terminal-input::selection {
-    background: #0078d4;
+    background: #f3f4f5;
     color: #ffffff;
+}
+
+/* Windows terminal scrollbar styling */
+.windows-terminal-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.windows-terminal-content::-webkit-scrollbar-track {
+    background: #000000;
+}
+
+.windows-terminal-content::-webkit-scrollbar-thumb {
+    background: #424242;
+    border-radius: 5px;
+}
+
+.windows-terminal-content::-webkit-scrollbar-thumb:hover {
+    background: #4f4f4f;
 }
 
 /* Terminal scrollbar */
@@ -1805,16 +1880,17 @@ button:disabled {
 .docker-terminal-window {
     width: 900px;
     height: 700px;
-    background: #0d1117;
-    border: 2px solid #30363d;
+    background: #000000;
+    border: 1px solid #333333;
     border-radius: 8px 8px 0 0;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.9);
     display: flex;
     flex-direction: column;
-    font-family: 'Consolas', 'Courier New', monospace;
+    font-family: 'Consolas', 'Courier New', 'Lucida Console', monospace;
     transform: scale(0.9);
     transition: transform 0.3s ease;
     position: relative;
+    overflow: hidden;
 }
 
 .docker-terminal-modal.show .docker-terminal-window {
@@ -1822,20 +1898,20 @@ button:disabled {
 }
 
 .docker-terminal-titlebar {
-    background: linear-gradient(to bottom, #161b22, #0d1117);
-    height: 35px;
+    background: #1f1f1f;
+    height: 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 12px;
     border-radius: 6px 6px 0 0;
-    border-bottom: 1px solid #30363d;
+    border-bottom: 1px solid #333333;
 }
 
 .docker-terminal-title {
-    color: #c9d1d9;
-    font-size: 13px;
-    font-weight: 500;
+    color: #cccccc;
+    font-size: 12px;
+    font-weight: 400;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1893,89 +1969,127 @@ button:disabled {
 
 .docker-terminal-content {
     flex: 1;
-    background: #0d1117;
-    color: #c9d1d9;
-    padding: 12px;
+    background: #000000;
+    color: #ffffff;
+    padding: 8px 12px;
     overflow-y: auto;
-    font-size: 13px;
-    line-height: 1.4;
+    font-size: 14px;
+    line-height: 1.5;
     display: flex;
     flex-direction: column;
+    font-family: 'Consolas', 'Courier New', 'Lucida Console', monospace;
 }
 
 .docker-terminal-header {
     color: #7d8590;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-size: 12px;
 }
 
 .docker-terminal-output {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 12px;
+    margin-bottom: 0;
 }
 
 .docker-terminal-line {
-    margin: 2px 0;
+    margin: 0;
     white-space: pre-wrap;
     word-wrap: break-word;
-    font-size: 13px;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 21px;
 }
 
 .docker-terminal-command {
-    color: #58a6ff;
-    font-weight: 500;
+    color: #ffffff;
 }
 
 .docker-terminal-info {
-    color: #c9d1d9;
+    color: #ffffff;
 }
 
 .docker-terminal-success {
-    color: #3fb950;
+    color: #f2f3f3;
 }
 
 .docker-terminal-warning {
-    color: #d29922;
+    color: #e5e510;
 }
 
 .docker-terminal-error {
-    color: #f85149;
+    color: #f14c4c;
 }
 
 .docker-terminal-blank {
     height: 14px;
 }
 
+/* Realistic inline terminal input - command appears in output area */
 .docker-terminal-input-line {
     display: flex;
     align-items: center;
-    background: #0d1117;
-    border-top: 1px solid #30363d;
-    padding-top: 8px;
+    background: transparent;
+    border-top: none;
+    padding-top: 0;
+    margin-top: 2px;
 }
 
 .docker-terminal-prompt {
-    color: #58a6ff;
+    color: #f2f7f5;
     margin-right: 8px;
     font-weight: 600;
     white-space: nowrap;
+    font-size: 13px;
 }
 
 .docker-terminal-input {
     flex: 1;
     background: transparent;
     border: none;
-    color: #c9d1d9;
-    font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 13px;
+    color: #ffffff;
+    font-family: 'Consolas', 'Courier New', 'Lucida Console', monospace;
+    font-size: 14px;
     outline: none;
-    caret-color: #58a6ff;
+    caret-color: #ffffff;
+    padding: 0;
+    margin: 0;
+    width: 100%;
 }
 
 .docker-terminal-input::selection {
-    background: #1f6feb;
+    background: #0078d4;
     color: #ffffff;
+}
+
+/* Cursor blink animation for realistic terminal feel */
+.docker-terminal-input:focus {
+    animation: none;
+}
+
+/* Command line wrapper for proper display */
+.command-line-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Terminal scrollbar styling */
+.docker-terminal-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.docker-terminal-content::-webkit-scrollbar-track {
+    background: #000000;
+}
+
+.docker-terminal-content::-webkit-scrollbar-thumb {
+    background: #424242;
+    border-radius: 5px;
+}
+
+.docker-terminal-content::-webkit-scrollbar-thumb:hover {
+    background: #4f4f4f;
 }
 
 .docker-terminal-resize-handle {
@@ -1994,7 +2108,7 @@ button:disabled {
 }
 
 .docker-terminal-output::-webkit-scrollbar-track {
-    background: #0d1117;
+    background: #000000;
 }
 
 .docker-terminal-output::-webkit-scrollbar-thumb {

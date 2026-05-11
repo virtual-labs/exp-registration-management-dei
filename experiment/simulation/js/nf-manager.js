@@ -1297,10 +1297,10 @@ class NFManager {
     getStatusColor(status) {
         switch (status) {
             case 'starting': return '#e74c3c'; // Red
-            case 'stable': return '#2ecc71';   // Green
-            case 'error': return '#e67e22';    // Orange
-            case 'stopped': return '#95a5a6';  // Gray
-            default: return '#3498db';         // Blue
+            case 'stable':   return '#2ecc71'; // Green
+            case 'error':    return '#e67e22'; // Orange
+            case 'stopped':  return '#e74c3c'; // Red
+            default:         return '#3498db'; // Blue
         }
     }
 

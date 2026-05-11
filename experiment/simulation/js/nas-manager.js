@@ -276,9 +276,45 @@ class NASManager {
     }
 
     /**
+     * Check whether all required NFs (core + gNB + UE) are deployed and stable
+     * @returns {{ ok: boolean, missing: string[] }}
+     */
+    checkDeploymentReady() {
+        const required = ['AMF', 'SMF', 'UPF', 'NRF', 'AUSF', 'UDM', 'UDR', 'gNB', 'UE'];
+        const allNFs = window.dataStore?.getAllNFs() || [];
+        const missing = [];
+
+        for (const type of required) {
+            const nf = allNFs.find(n => n.type === type);
+            if (!nf) {
+                missing.push(type);
+            } else if (nf.status !== 'stable') {
+                missing.push(`${type} (not stable)`);
+            }
+        }
+
+        return { ok: missing.length === 0, missing };
+    }
+
+    /**
      * Open NAS panel and hide configuration panel
      */
     openNASPanel() {
+        // Guard: core + gNB + UE must all be deployed and stable
+        const { ok, missing } = this.checkDeploymentReady();
+        if (!ok) {
+            const missingList = missing.join(', ');
+            alert(
+                `⚠️ NAS process cannot start.\n\n` +
+                `The following network functions are not ready:\n${missingList}\n\n` +
+                `Please deploy the full core network, gNB, and UE first:\n` +
+                `  docker compose -f docker-compose.yml up -d\n` +
+                `  docker compose -f docker-compose-gnb.yml up -d\n` +
+                `  docker compose -f docker-compose-ue.yml up -d`
+            );
+            return;
+        }
+
         const configPanel = document.getElementById('config-panel');
         const nasPanel = document.getElementById('nas-panel');
         const nfPanel = document.getElementById('nf-panel');
