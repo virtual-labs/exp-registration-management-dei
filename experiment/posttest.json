@@ -1,39 +1,263 @@
 {
   "version": 2.0,
+  "filters": {
+    "difficulty": ["beginner", "intermediate"]
+  },
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "Q1. What is the first visible indication that the core network has been successfully deployed using One-Click Deploy?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "UE sends Registration Request",
+        "b": "All network functions appear sequentially in the topology",
+        "c": "NAS messages start flowing automatically",
+        "d": "gNB broadcasts SIB1"
       },
+      "correctAnswer": "b",
+      "difficulty": "beginner",
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
-      },
-      "correctAnswer": "a",
-      "difficulty": "beginner"
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      }
     },
     {
-      "question": "This is a Sample Question 2?",
+      "question": "Q2. Which action switches the interface into the NAS Registration experiment mode?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Deploying the gNB",
+        "b": "Clicking the NAS button in the top toolbar",
+        "c": "Starting the UE",
+        "d": "Opening the message inspector panel"
       },
+      "correctAnswer": "b",
+      "difficulty": "beginner",
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q3. Where are the JSON contents of NAS messages displayed during the experiment?",
+      "answers": {
+        "a": "Right panel",
+        "b": "Topology view",
+        "c": "Left panel",
+        "d": "Bottom status bar"
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q4. Which identifier is observed in the Registration Request message during Step 1?",
+      "answers": {
+        "a": "SUPI",
+        "b": "IMEI",
+        "c": "SUCI",
+        "d": "5G-GUTI"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q5. Which step involves the AMF requesting the UE’s permanent identity?",
+      "answers": {
+        "a": "Registration Request",
+        "b": "Identity Request",
+        "c": "Authentication Request",
+        "d": "Security Mode Command"
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q6. Which network function generates authentication vectors such as RAND and AUTN?",
+      "answers": {
+        "a": "AMF",
+        "b": "AUSF",
+        "c": "UDM",
+        "d": "PCF"
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q7. At which step does the UE validate network authenticity?",
+      "answers": {
+        "a": "Identity Response",
+        "b": "NAS Authentication Request",
+        "c": "Security Mode Complete",
+        "d": "Registration Accept"
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q8. Which value does the UE compute and return to prove its identity?",
+      "answers": {
+        "a": "AUTN",
+        "b": "RAND",
+        "c": "RES*",
+        "d": "K_SEAF"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q9. Which message activates NAS encryption and integrity protection?",
+      "answers": {
+        "a": "Authentication Response",
+        "b": "Security Mode Command",
+        "c": "Security Mode Complete",
+        "d": "Registration Accept"
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q10. After which step are all NAS messages encrypted and integrity protected?",
+      "answers": {
+        "a": "Authentication Request",
+        "b": "Security Mode Command",
+        "c": "Security Mode Complete",
+        "d": "Registration Complete"
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q11. Which message assigns the temporary identity 5G-GUTI to the UE?",
+      "answers": {
+        "a": "Registration Request",
+        "b": "Identity Response",
+        "c": "Registration Accept",
+        "d": "Registration Complete"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q12. What is the purpose of the Registration Complete message?",
+      "answers": {
+        "a": "To authenticate the UE",
+        "b": "To activate security",
+        "c": "To acknowledge successful registration",
+        "d": "To request subscription data"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q13. How many interactive steps are executed in the NAS Registration experiment panel?",
+      "answers": {
+        "a": "10",
+        "b": "11",
+        "c": "12",
+        "d": "13"
+      },
+      "correctAnswer": "d",
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Incorrect.",
+        "d": "Correct."
+      }
+    },
+    {
+      "question": "Q14. Which component forwards NAS messages between the UE and the AMF?",
+      "answers": {
+        "a": "UDM",
+        "b": "UPF",
+        "c": "gNB",
+        "d": "PCF"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
+    },
+    {
+      "question": "Q15. At the end of Step 13, what is the UE’s operational state?",
+      "answers": {
+        "a": "Deregistered and idle",
+        "b": "Authenticated but not registered",
+        "c": "Registered, authenticated, and secure",
+        "d": "Connected only at radio level"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner",
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      }
     }
   ]
 }

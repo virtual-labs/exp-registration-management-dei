@@ -1,1 +1,1 @@
-## Experiment name
+# Demonstrate Registration Management Procedures
