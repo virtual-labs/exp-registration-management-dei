@@ -105,11 +105,15 @@ watch docker compose -f docker-compose.yml ps -a
 2. Confirm the deployment when prompted.
 3. **Observation:** The system will automatically clear any existing topology and sequentially deploy the Service Bus, then all Network Functions (NRF, AMF, SMF, UPF, AUSF, UDM, PCF, NSSF, UDR, MySQL, gNB, UE, ext-dn), and establish the necessary connections. NFs will appear one by one.
 
+<img src="images/prd22.png" width="90%">
+
+*Fig:Automatic one-click core network deployment*
+
 ### Option C (Manual):
 
 Manually add each Network Function from the Network Function panel, then enter configuration details in the left configuration panel and start the NF.
 
-<img src="images/prd7.png" width="90%">
+<img src="images/prd23.png" width="90%">
 
 *Fig: Core Network Deployment*
 
@@ -120,7 +124,7 @@ Once the core network is successfully deployed (wait for the "One-Click Topology
 
 1. Click on the **NAS** button in the top toolbar to switch the interface to the NAS Registration experiment mode.
 
-<img src="images/prd8.png" width="90%">
+<img src="images/prd7.png" width="90%">
 
 *Fig: Enable NAS Registration Mode*
 
@@ -131,7 +135,7 @@ You will now see the interface transform:
 - **Right Panel (NAS Registration Process):** A list of 13 interactive steps representing the registration flow.
 - **Left Panel (NAS Messages):** An inspector panel that displays the JSON content of every NAS message sent between NFs.
 
-<img src="images/prd9.png" width="90%">
+<img src="images/prd8.png" width="90%">
 
 *Fig: Experiment Panels Overview*
 
@@ -148,7 +152,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** A packet travels from UE to gNB, then to AMF. The left panel displays the JSON message containing the `RegistrationRequest` with `SUCI` (Subscription Concealed Identifier).
 
-<img src="images/prd10.png" width="90%">
+<img src="images/prd9.png" width="90%">
 
 *Fig: Step 1: Registration Request*
 
@@ -160,7 +164,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** A packet travels from AMF to gNB, then to UE. The JSON message shows `IdentityRequest`.
 
-<img src="images/prd11.png" width="90%">
+<img src="images/prd10.png" width="90%">
 
 *Fig: Step 2: Identity Request*
 
@@ -172,7 +176,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** A packet travels from UE back to AMF. The JSON message contains the `IdentityResponse` with `supi`.
 
-<img src="images/prd12.png" width="90%">
+<img src="images/prd11.png" width="90%">
 
 *Fig: Step 3: Identity Response*
 
@@ -184,7 +188,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** A packet travels from AMF to AUSF. The JSON message shows `AuthenticationRequest` using `5G-AKA`.
 
-<img src="images/prd13.png" width="90%">
+<img src="images/prd12.png" width="90%">
 
 *Fig: Step 4: Authentication Request*
 
@@ -196,7 +200,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** A packet travels from AUSF to UDM.
 
-<img src="images/prd14.png" width="90%">
+<img src="images/prd13.png" width="90%">
 
 *Fig: Step 5: Security Data Request*
 
@@ -208,7 +212,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels from UDM to AUSF. Message contains `AuthenticationVectors` (RAND, AUTN).
 
-<img src="images/prd15.png" width="90%">
+<img src="images/prd14.png" width="90%">
 
 *Fig: Step 6: Authentication Vectors*
 
@@ -220,7 +224,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels from AUSF to AMF.
 
-<img src="images/prd16.png" width="90%">
+<img src="images/prd15.png" width="90%">
 
 *Fig: Step 7: Authentication Challenge*
 
@@ -232,7 +236,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels from AMF to UE. Message is `NASAuthenticationRequest`.
 
-<img src="images/prd17.png" width="90%">
+<img src="images/prd16.png" width="90%">
 
 *Fig: Step 8: NAS Authentication Request*
 
@@ -244,7 +248,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels from UE to AMF. Message contains `AuthenticationResponse`.
 
-<img src="images/prd18.png" width="90%">
+<img src="images/prd17.png" width="90%">
 
 *Fig: Step 9: Authentication Response*
 
@@ -256,7 +260,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels from AMF to UE. Message contains `SecurityModeCommand` (ciphering/integrity algorithms).
 
-<img src="images/prd19.png" width="90%">
+<img src="images/prd18.png" width="90%">
 
 *Fig: Step 10: Security Mode Command*
 
@@ -268,7 +272,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels to AMF. Message is `SecurityModeComplete`.
 
-<img src="images/prd20.png" width="90%">
+<img src="images/prd19.png" width="90%">
 
 *Fig: Step 11: Security Mode Complete*
 
@@ -280,7 +284,7 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels to UE. Message is `RegistrationAccept` containing `5G-GUTI`.
 
-<img src="images/prd21.png" width="90%">
+<img src="images/prd20.png" width="90%">
 
 *Fig: Step 12: Registration Accept*
 
@@ -292,6 +296,6 @@ Follow the steps in the right panel sequentially. Click each step button to exec
 
 **Observation:** Packet travels to AMF. Message is `RegistrationComplete` with status `OK`.
 
-<img src="images/prd22.png" width="90%">
+<img src="images/prd21.png" width="90%">
 
 *Fig: Step 13: Registration Complete*
