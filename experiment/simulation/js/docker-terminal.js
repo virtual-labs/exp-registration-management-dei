@@ -2440,7 +2440,8 @@ networks:
         this.addTerminalLine(output, '902c1fcc4369   host          host      local', 'info');
         this.addTerminalLine(output, '0c712814bbb0   none          null      local', 'info');
 
-        if (this.oaiWorkshopNetworkExists) {
+        const hasNFs = (window.dataStore?.getAllNFs() || []).some(nf => nf.type !== 'gNB' && nf.type !== 'UE');
+        if (this.oaiWorkshopNetworkExists || hasNFs) {
             this.addTerminalLine(output, `${this.oaiWorkshopNetworkId}   oaiworkshop   bridge    local`, 'success');
         }
     }
@@ -2458,7 +2459,12 @@ networks:
         } else if (networkName === 'none') {
             this.inspectNoneNetwork(output);
         } else if (networkName === 'oaiworkshop') {
-            if (this.oaiWorkshopNetworkExists) {
+            const hasNFs = (window.dataStore?.getAllNFs() || []).some(nf => nf.type !== 'gNB' && nf.type !== 'UE');
+            if (this.oaiWorkshopNetworkExists || hasNFs) {
+                if (!this.oaiWorkshopNetworkExists) {
+                    this.oaiWorkshopNetworkExists = true;
+                    this.oaiWorkshopCreatedTime = this.oaiWorkshopCreatedTime || Date.now();
+                }
                 this.inspectOAIWorkshopNetwork(output);
             } else {
                 this.addTerminalLine(output, `Error: No such network: ${networkName}`, 'error');
