@@ -2625,7 +2625,6 @@ class UIController {
                     'help', 'cls', 'clear', 'exit',
                     'ifconfig', 'systeminfo', 'netstat',
                     'ping ',
-                    'ping subnet',
                     'iperf3 -s',
                     'iperf3 -c ',
                 ];
@@ -2701,11 +2700,9 @@ class UIController {
         this.showWindowsHelp(output);
     } else if (cmd === 'ifconfig') {
         this.showifconfig(nf, output);
-    } else if (cmd.startsWith('ping ')) {
+    } else if (cmd.startsWith('ping ') && cmd !== 'ping subnet') {
         // Parse ping command with -I and -c options
         await this.executeLinuxPing(nf, command, output);
-    } else if (cmd === 'ping subnet') {
-        await this.executeWindowsPingSubnet(nf, output);
     } else if (cmd === 'cls' || cmd === 'clear') {
         output.innerHTML = '';
     } else if (cmd === 'exit') {
