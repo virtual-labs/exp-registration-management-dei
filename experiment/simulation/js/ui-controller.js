@@ -604,7 +604,7 @@ class UIController {
     setupConnectionModeListener() {
         if (window.dataStore) {
             window.dataStore.subscribe((event, data) => {
-                if (event === 'nf-added') {
+                if (event === 'nf-added' || event === 'nf-removed' || event === 'data-imported' || event === 'data-cleared') {
                     this.updateLogNFFilter();
                 }
             });
@@ -1108,7 +1108,7 @@ class UIController {
                 
                 <div class="form-group">
                     <label>Port *</label>
-                    <input type="number" id="config-port" value="${defaultPort}" required>
+                    <input type="text" id="config-port" value="${defaultPort}" required>
                 </div>
                 
                 <div class="form-group">
@@ -1151,6 +1151,34 @@ class UIController {
                     } else {
                         protocolSelect.value = currentProtocol;
                     }
+                }
+            });
+        }
+
+        // IP input: only allow digits and dots
+        const ipInput = document.getElementById('config-ip');
+        if (ipInput) {
+            ipInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+            });
+            ipInput.addEventListener('keydown', (e) => {
+                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', '.'];
+                if (!/^\d$/.test(e.key) && !allowedKeys.includes(e.key)) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // Port input: only allow numeric characters
+        const portInput = document.getElementById('config-port');
+        if (portInput) {
+            portInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            });
+            portInput.addEventListener('keydown', (e) => {
+                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+                if (!/^\d$/.test(e.key) && !allowedKeys.includes(e.key)) {
+                    e.preventDefault();
                 }
             });
         }
@@ -1269,7 +1297,7 @@ class UIController {
                 
                 <div class="form-group">
                     <label>Port</label>
-                    <input type="number" id="config-port" value="${nf.config.port}">
+                    <input type="text" id="config-port" value="${nf.config.port}">
                 </div>
                 
                 
@@ -1339,6 +1367,34 @@ class UIController {
                         // Revert selection
                         protocolSelect.value = currentProtocol;
                     }
+                }
+            });
+        }
+
+        // IP input: only allow digits and dots
+        const ipInput = document.getElementById('config-ip');
+        if (ipInput) {
+            ipInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+            });
+            ipInput.addEventListener('keydown', (e) => {
+                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', '.'];
+                if (!/^\d$/.test(e.key) && !allowedKeys.includes(e.key)) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // Port input: only allow numeric characters
+        const portInput = document.getElementById('config-port');
+        if (portInput) {
+            portInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            });
+            portInput.addEventListener('keydown', (e) => {
+                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+                if (!/^\d$/.test(e.key) && !allowedKeys.includes(e.key)) {
+                    e.preventDefault();
                 }
             });
         }
@@ -1567,6 +1623,24 @@ class UIController {
         // Validate IP address format
         if (!this.isValidIP(ipAddress)) {
             alert('❌ Invalid IP address format!\n\nPlease enter a valid IP address (e.g., 192.168.1.20)');
+            return;
+        }
+
+        // Validate IP address: not 0.0.0.0, must be from 1.0.0.0 to 255.255.255.255
+        if (ipAddress === '0.0.0.0') {
+            alert('❌ Invalid entries!\n\nIP address 0.0.0.0 is not allowed.');
+            return;
+        }
+        const ipParts = ipAddress.split('.').map(Number);
+        if (ipParts[0] === 0) {
+            alert('❌ Invalid entries!\n\nIP address must be from 1.0.0.0 to 255.255.255.255.');
+            return;
+        }
+
+        // Validate port: 4 to 6 digits
+        const portStr = document.getElementById('config-port')?.value;
+        if (!portStr || !/^\d{4,6}$/.test(portStr)) {
+            alert('❌ Invalid entries!\n\nPort must be between 4 and 6 digits.');
             return;
         }
 
@@ -1826,6 +1900,24 @@ class UIController {
         // Validate IP address format
         if (!this.isValidIP(ipAddress)) {
             alert('❌ Invalid IP address format!\n\nPlease enter a valid IP address (e.g., 192.168.1.20)');
+            return;
+        }
+
+        // Validate IP address: not 0.0.0.0, must be from 1.0.0.0 to 255.255.255.255
+        if (ipAddress === '0.0.0.0') {
+            alert('❌ Invalid entries!\n\nIP address 0.0.0.0 is not allowed.');
+            return;
+        }
+        const ipParts = ipAddress.split('.').map(Number);
+        if (ipParts[0] === 0) {
+            alert('❌ Invalid entries!\n\nIP address must be from 1.0.0.0 to 255.255.255.255.');
+            return;
+        }
+
+        // Validate port: 4 to 6 digits
+        const portStr = document.getElementById('config-port')?.value;
+        if (!portStr || !/^\d{4,6}$/.test(portStr)) {
+            alert('❌ Invalid entries!\n\nPort must be between 4 and 6 digits.');
             return;
         }
 
