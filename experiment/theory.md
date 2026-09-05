@@ -48,9 +48,15 @@ The registration procedure involves coordination among multiple network function
 
 ## 3. UE Registration Process: Detailed Flow
 
-<img src="images/fig1.svg" alt="UE Registration Overall Message Flow" width="70%">
+The comprehensive signaling flow for a 5G User Equipment (UE) registration is a sophisticated, multi-phase procedure. As illustrated in **Figure 1**, this process highlights the chronological sequence of interactions among the UE, the Next Generation NodeB (gNB), and essential 5G Core Network functions (such as the AMF, AUSF, and UDM). 
 
-*Fig: UE Registration Overall Message Flow*
+<div align="center">
+  <img src="images/fig1.svg" alt="UE Registration Overall Message Flow" width="70%">
+  <br>
+  <em>Figure 1: UE Registration Overall Message Flow</em>
+</div>
+
+The end-to-end process depicted above encompasses the initial radio access establishment, core network admission, mutual authentication, security context activation, and the final registration approval. Together, these phases ensure a secure and authorized connection to the 5G network, establishing the foundation for subsequent data services.
 
 ### 3.1 Phase 1: Radio Access Establishment:
 
@@ -116,7 +122,7 @@ Now NAS signaling begins. UE submits identification, capabilities, and intent to
 
 **Interfaces:**
 * NR-Uu (radio layer)
-* N1 logical UE → AMF carried inside N2
+* N1 logical UE →  AMF carried over the N2 interface
 
 **UE Sends:**
 * RRC Setup Complete containing: NAS Registration Request message
