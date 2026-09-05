@@ -1,0 +1,263 @@
+{
+  "version": 2.0,
+  "filters": {
+    "difficulty": ["beginner", "intermediate"]
+  },
+  "questions": [
+    {
+      "question": "Q1. What is the primary purpose of Registration Management in a 5G SA network?",
+      "answers": {
+        "a": "To allocate radio frequencies",
+        "b": "To provide authorized access to network services",
+        "c": "To establish user-plane data tunnels",
+        "d": "To manage charging records"
+      },
+      "explanations": {
+        "a": "Incorrect. Radio frequencies are managed by the RAN.",
+        "b": "Correct. Registration Management authorizes UE access to the 5G network.",
+        "c": "Incorrect. User-plane tunnels are handled after registration.",
+        "d": "Incorrect. Charging is managed by separate functions."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q2. Which 5G Core Network Function terminates NAS signaling from the UE?",
+      "answers": {
+        "a": "SMF",
+        "b": "UPF",
+        "c": "AMF",
+        "d": "PCF"
+      },
+      "explanations": {
+        "a": "Incorrect. SMF manages PDU sessions.",
+        "b": "Incorrect. UPF handles user-plane traffic.",
+        "c": "Correct. AMF terminates all NAS signaling.",
+        "d": "Incorrect. PCF provides policy rules."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q3. Which identifier protects the permanent subscriber identity over the air?",
+      "answers": {
+        "a": "SUPI",
+        "b": "IMEI",
+        "c": "SUCI",
+        "d": "5G-GUTI"
+      },
+      "explanations": {
+        "a": "Incorrect. SUPI is the permanent identity.",
+        "b": "Incorrect. IMEI identifies equipment.",
+        "c": "Correct. SUCI conceals the SUPI during transmission.",
+        "d": "Incorrect. 5G-GUTI is assigned after registration."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q4. Which protocol carries NAS messages between the UE and gNB?",
+      "answers": {
+        "a": "NGAP",
+        "b": "RRC",
+        "c": "PDCP",
+        "d": "SCTP"
+      },
+      "explanations": {
+        "a": "Incorrect. NGAP is used between gNB and AMF.",
+        "b": "Correct. NAS messages are encapsulated within RRC.",
+        "c": "Incorrect. PDCP handles data convergence.",
+        "d": "Incorrect. SCTP is used on the N2 interface."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Q5. Which NAS message initiates the registration procedure?",
+      "answers": {
+        "a": "Registration Complete",
+        "b": "Registration Accept",
+        "c": "Registration Request",
+        "d": "Authentication Request"
+      },
+      "explanations": {
+        "a": "Incorrect. This confirms registration completion.",
+        "b": "Incorrect. This is sent by the network.",
+        "c": "Correct. Registration Request starts the procedure.",
+        "d": "Incorrect. Authentication occurs after registration initiation."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q6. Which network function performs subscriber authentication?",
+      "answers": {
+        "a": "UDM",
+        "b": "AUSF",
+        "c": "PCF",
+        "d": "NRF"
+      },
+      "explanations": {
+        "a": "Incorrect. UDM stores subscriber data.",
+        "b": "Correct. AUSF performs authentication procedures.",
+        "c": "Incorrect. PCF handles policies.",
+        "d": "Incorrect. NRF supports service discovery."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q7. What is established by the Security Mode Command?",
+      "answers": {
+        "a": "Radio bearers",
+        "b": "Integrity protection and ciphering",
+        "c": "User-plane tunnels",
+        "d": "Network slicing policies"
+      },
+      "explanations": {
+        "a": "Incorrect. Radio bearers are configured by RRC.",
+        "b": "Correct. Security Mode Command activates NAS security.",
+        "c": "Incorrect. User-plane tunnels are handled later.",
+        "d": "Incorrect. Slicing policies are handled by AMF and PCF."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q8. Which identifier is assigned by the AMF to protect user privacy after registration?",
+      "answers": {
+        "a": "SUPI",
+        "b": "IMEI",
+        "c": "5G-GUTI",
+        "d": "TAI"
+      },
+      "explanations": {
+        "a": "Incorrect. SUPI is permanent.",
+        "b": "Incorrect. IMEI identifies the device.",
+        "c": "Correct. 5G-GUTI is a temporary identity.",
+        "d": "Incorrect. TAI identifies a tracking area."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q9. What triggers a Mobility Registration Update?",
+      "answers": {
+        "a": "UE power-on",
+        "b": "Expiry of authentication keys",
+        "c": "Movement to a new Tracking Area",
+        "d": "Network slice change request"
+      },
+      "explanations": {
+        "a": "Incorrect. Power-on triggers initial registration.",
+        "b": "Incorrect. Key expiry triggers re-authentication.",
+        "c": "Correct. Mobility updates occur when UE enters a new TAI.",
+        "d": "Incorrect. Slice changes do not trigger mobility updates."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Q10. Which interface is used between gNB and AMF?",
+      "answers": {
+        "a": "N1",
+        "b": "N2",
+        "c": "N3",
+        "d": "N6"
+      },
+      "explanations": {
+        "a": "Incorrect. N1 is logical UE-AMF signaling.",
+        "b": "Correct. N2 connects gNB and AMF.",
+        "c": "Incorrect. N3 connects gNB and UPF.",
+        "d": "Incorrect. N6 connects UPF to data networks."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q11. Which data is retrieved from UDM during initial registration?",
+      "answers": {
+        "a": "Radio configuration",
+        "b": "Authentication vectors and subscription data",
+        "c": "User-plane traffic statistics",
+        "d": "Paging messages"
+      },
+      "explanations": {
+        "a": "Incorrect. Radio configuration is handled by gNB.",
+        "b": "Correct. UDM provides authentication and subscription data.",
+        "c": "Incorrect. Traffic statistics are handled elsewhere.",
+        "d": "Incorrect. Paging is managed by AMF."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Q12. What does TAI stand for in the context of mobility?",
+      "answers": {
+        "a": "Temporary Access Identifier",
+        "b": "Tracking Area Identity",
+        "c": "Terminal Authorization Index",
+        "d": "Traffic Area Interface"
+      },
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q13. Which registration type is used when the UE has no valid registration context?",
+      "answers": {
+        "a": "Periodic Registration",
+        "b": "Mobility Registration",
+        "c": "Initial Registration",
+        "d": "Emergency Registration"
+      },
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q14. Which timer triggers Periodic Registration Update?",
+      "answers": {
+        "a": "T300",
+        "b": "T3512",
+        "c": "T3324",
+        "d": "T3550"
+      },
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Correct.",
+        "c": "Incorrect.",
+        "d": "Incorrect."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Q15. Which message confirms successful registration to the network?",
+      "answers": {
+        "a": "Registration Accept",
+        "b": "Security Mode Complete",
+        "c": "Registration Complete",
+        "d": "Authentication Response"
+      },
+      "explanations": {
+        "a": "Incorrect.",
+        "b": "Incorrect.",
+        "c": "Correct.",
+        "d": "Incorrect."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    }
+  ]
+} 

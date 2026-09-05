@@ -1,0 +1,951 @@
+<!DOCTYPE html><html lang="en"><head>
+      <!--Google Tag Manager-->
+      <script class="gtm">
+        var dataLayer = [{
+        'labName': 'Virtual Lab',
+        'discipline': 'Test',
+        'college': 'DLBG',
+        'phase': 'Testing',
+        'expName': 'Demonstrate Registration Management Procedures',
+        'expShortName': 'registration-management'
+        }];
+    
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-5NMQ9NQ');
+      </script>
+      <!--End Google Tag Manager-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    
+    	<meta name="experiment-short-name" content="registration-management">
+    	<meta name="developer-institute" content="DLBG">
+    	<meta name="learning-unit" content="Demonstrate Registration Management Procedures">
+    	<meta name="task-name" content="Theory">
+    
+    <!-- For iPhone -->
+    <meta name="msapplication-TileColor" content="#4076e0">
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#4076e0">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#4076e0">
+    <title>Virtual Labs</title>
+    <link rel="shortcut icon" href="./assets/images/favicon.ico">
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css" integrity="sha512-Oy18vBnbSJkXTndr2n6lDMO5NN31UljR8e/ICzVPrGpSud4Gkckb8yUpqhKuUNoE+o9gAb4O/rAxxw1ojyUVzg==" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&amp;family=Raleway&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./assets/css/github-markdown.min.css">
+    <link rel="stylesheet" href="./assets/css/vlabs-style.css">
+    <link rel="stylesheet" href="./assets/css/toast.css">
+    <link rel="stylesheet" href="./assets/katex_assets/katex.min.css">
+    
+    <script src="./assets/js/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      h1 {
+      font-size: 1.8rem;
+      }
+      h2 {
+      font-size: 1.4rem;
+      }
+      h3 {
+      font-size: 1.2rem;
+      }
+
+      h2, h3 {
+      font-weight: 800;
+      }
+    </style>
+    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"></head>
+  <body class="p-0 container-fluid vlabs-page d-flex flex-column justify-content-between">
+      <!--Google Tag Manager (noscript)-->
+      <noscript class="gtm">
+        <iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-5NMQ9NQ" style="display:none;visibility:hidden" width="0">
+        </iframe>
+      </noscript>
+      <!--End Google Tag Manager (noscript)-->
+  
+      <header class="vlabs-header sticky-top bg-white">
+        <nav class="p-0 navbar navbar-light d-flex align-items-stretch">
+          
+          <button class="navbar-toggler px-4" type="button" onclick="toggle()">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      
+          <div class="d-flex justify-content-center">        
+            <a href="https://vlab.co.in" class="navbar-brand">
+              <img src="./assets/images/vlabs-color-small-moe.jpg" alt="vlabs logo" class="vlabs-logo">
+            </a>
+          </div>
+          
+          <div id="headerNavbar" class="d-none border-top flex-grow-1 d-lg-flex align-items-center justify-content-end">
+            <div class="svc-rating-display">
+                <rating-display spreadsheetid="1x12nhpp0QvnsA6x-O1sV4IA9SAbfVsq_wiexWkutOmU" sheetname="Experiment-Database" columnname="Experiment Short Name" columnvalue="registration-management" imagesdirectory="/plugins/svc-rating/images/">
+                </rating-display>
+            </div>      <div class="svc-rating-submit">
+                <rating-submit title="Rate" this="" experiment="">
+                </rating-submit>
+            </div>      <bug-report id="bug-report" title="[BUG REPORT] Demonstrate Registration Management Procedures" page-type="text" context-info="{&quot;organisation&quot;:&quot;Virtual Labs&quot;,&quot;developer_institute&quot;:&quot;DLBG&quot;,&quot;expname&quot;:&quot;Demonstrate Registration Management Procedures&quot;,&quot;labname&quot;:&quot;Virtual Lab&quot;,&quot;phase&quot;:&quot;Testing&quot;}" checkbox-json="{&quot;text&quot;:[&quot;Insufficient Content&quot;],&quot;video&quot;:[&quot;Insufficient Content&quot;],&quot;assesment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;assessment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;simulation&quot;:[&quot;Simulation Not Working&quot;,&quot;Incorrect Results/Observations&quot;,&quot;Insufficient/Incorrect Instructions&quot;],&quot;DEFAULT&quot;:[&quot;Page Not Loading&quot;,&quot;Content Not Visible&quot;,&quot;Incorrect Content&quot;]}" button_style="border: none; color: #fff; background-color: #288ec8; text-align: center; font-size: 1.05rem; border-radius: 1em;padding: 0.6em 1.2em; margin: 0 10px" position="override" custom_button_class="v-button"></bug-report>
+          </div>
+        </nav>
+      </header>
+      <div class="container-fluid flex-fill d-flex flex-column vlabs-page-main">
+        <div class="row d-flex justify-content-between">
+          <div class="flex-column">
+          <div class="row py-4 px-4 breadcrumbs">
+          	<div class="title is-4 tools">Tools</div>
+          	<span class="mx-2">
+          		<i aria-hidden="true" class="fa fa-angle-right"></i>
+          	</span>
+          	<a href="performance-report.html" class="my-2 mx-3" target="_blank">
+          		<button class="v-button">Performance Tool</button>
+          	</a>
+          	<a href="validator-report.html" class="my-2 mx-3" target="_blank">
+          		<button class="v-button">Validation Tool</button>
+          	</a>
+          </div>
+          </div>
+        </div>
+        <div class="row flex-grow-1 d-flex flex-nowrap flex-column flex-lg-row">
+          <div class="modal fade popupmenu" id="popupMenu" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">
+                              <a href="https://vlab.co.in" class="navbar-brand">
+                                  <img src="./assets/images/vlabs-color-small-moe.jpg" alt="vlabs logo" class="vlabs-logo">
+                              </a>
+                          </h5>
+                          <button type="button" class="btn-close align-self-center" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body nav-menu">
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="index.html" class="p-2 ">
+                                      Aim
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="theory.html" class="p-2  current-item ">
+                                      Theory
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="pretest.html" class="p-2 ">
+                                      Pretest
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="procedure.html" class="p-2 ">
+                                      Procedure
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="simulation.html" class="p-2 ">
+                                      Simulation
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="posttest.html" class="p-2 ">
+                                      Posttest
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="references.html" class="p-2 ">
+                                      References
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="contributors.html" class="p-2 ">
+                                      Contributors
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="feedback.html" class="p-2 ">
+                                      Feedback
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="nav flex-column sidebar nav-menu flex-shrink-0 px-lg-4 align-items-center align-items-lg-start hidden d-none d-lg-flex" id="menu">
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="index.html" class="p-2 ">
+                        Aim
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="theory.html" class="p-2  current-item ">
+                        Theory
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="pretest.html" class="p-2 ">
+                        Pretest
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="procedure.html" class="p-2 ">
+                        Procedure
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="simulation.html" class="p-2 ">
+                        Simulation
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="posttest.html" class="p-2 ">
+                        Posttest
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="references.html" class="p-2 ">
+                        References
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="contributors.html" class="p-2 ">
+                        Contributors
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="feedback.html" class="p-2 ">
+                        Feedback
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+          </div>          <div class="vlabs-page-content px-5 pb-4 flex-grow-1 markdown-body">
+            <div class="text-center fix-spacing">
+              <h1 id="demonstrate-registration-management-procedures">Demonstrate Registration Management Procedures</h1>
+          
+            </div>
+              <h2 id="1-introduction">1. Introduction</h2>
+          <p>Registration Management is one of the most fundamental procedures in 5G Standalone (SA) networks, serving as the gateway through which User Equipment gains authorized access to network services. This experiment provides comprehensive hands-on experience with both Initial Registration and Mobility Registration Update procedures, demonstrating how 5G networks manage user identity, authentication, security, and mobility.</p>
+          <p>The registration procedure represents a sophisticated orchestration of signaling between multiple network functions. When a UE attempts to access the 5G network, it initiates a complex dialogue involving identity verification, mutual authentication, security establishment, and policy application. This process ensures that only authorized subscribers can access network resources while maintaining privacy and security throughout.</p>
+          <h3 id="11-background-and-theoretical-concepts">1.1 Background and Theoretical Concepts:</h3>
+          <p>In 5G networks, Registration Management has evolved significantly from its 4G predecessor to support the Service-Based Architecture (SBA) paradigm. The procedure now handles network slicing, enhanced privacy protection through Subscription Concealed Identifier (SUCI), and more granular mobility management through Registration Areas.</p>
+          <p>Initial Registration occurs when a UE connects to the 5G network for the first time or after being deregistered. During this procedure, the UE must prove its identity, authenticate with the core network, establish security contexts, and receive authorization for specific network slices and services.</p>
+          <p>Mobility Registration Update is triggered when a UE moves across Tracking Areas (TA) that are outside its current Registration Area. This procedure allows the network to maintain an updated location of the UE without requiring full re-authentication, thereby reducing signaling overhead and improving mobility efficiency.</p>
+          <p>The registration process relies on two distinct signaling layers:</p>
+          <ul>
+          <li><strong>RAS (Radio Access Stratum):</strong> Signaling between UE and gNB using RRC protocol for radio resource management</li>
+          <li><strong>NAS (Non-Access Stratum):</strong> Signaling between UE and AMF that is transparent to the gNB, handling mobility, session, and authentication procedures</li>
+          </ul>
+          <h3 id="12-the-role-of-amf-in-registration-management">1.2 The Role of AMF in Registration Management:</h3>
+          <p>The Access and Mobility Management Function (AMF) serves as the central control point for all registration procedures. It performs several critical functions:</p>
+          <ul>
+          <li>Terminates all NAS signaling from the UE</li>
+          <li>Coordinates authentication through AUSF</li>
+          <li>Retrieves subscriber data from UDM</li>
+          <li>Applies access and mobility policies from PCF</li>
+          <li>Manages Registration Areas and Tracking Area Lists</li>
+          <li>Allocates temporary identities (5G-GUTI) for privacy protection</li>
+          <li>Handles mobility between different registration areas</li>
+          </ul>
+          <h2 id="2-fundamentals">2. Fundamentals</h2>
+          <h3 id="21-5g-core-network-functions-involved">2.1 5G Core Network Functions Involved</h3>
+          <p>The registration procedure involves coordination among multiple network functions, each playing a specific role:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Network Function</th>
+          <th>Full Name</th>
+          <th>Role in Registration</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>UE</td>
+          <td>User Equipment</td>
+          <td>Initiates registration, proves identity, responds to authentication challenges</td>
+          </tr>
+          <tr>
+          <td>gNB</td>
+          <td>Next Generation NodeB</td>
+          <td>Provides radio access, forwards NAS messages between UE and AMF</td>
+          </tr>
+          <tr>
+          <td>AMF</td>
+          <td>Access and Mobility Management Function</td>
+          <td>Orchestrates registration, manages mobility, terminates NAS signaling</td>
+          </tr>
+          <tr>
+          <td>AUSF</td>
+          <td>Authentication Server Function</td>
+          <td>Performs subscriber authentication, validates credentials</td>
+          </tr>
+          <tr>
+          <td>UDM</td>
+          <td>Unified Data Management</td>
+          <td>Stores subscription data, generates authentication vectors</td>
+          </tr>
+          <tr>
+          <td>UDR</td>
+          <td>Unified Data Repository</td>
+          <td>Database backend for subscriber information</td>
+          </tr>
+          <tr>
+          <td>PCF</td>
+          <td>Policy Control Function</td>
+          <td>Provides access and mobility policies</td>
+          </tr>
+          <tr>
+          <td>NRF</td>
+          <td>Network Repository Function</td>
+          <td>Service discovery for network functions</td>
+          </tr>
+          </tbody></table>
+          <h2 id="3-ue-registration-process-detailed-flow">3. UE Registration Process: Detailed Flow</h2>
+          <p>The comprehensive signaling flow for a 5G User Equipment (UE) registration is a sophisticated, multi-phase procedure. As illustrated in <strong>Figure 1</strong>, this process highlights the chronological sequence of interactions among the UE, the Next Generation NodeB (gNB), and essential 5G Core Network functions (such as the AMF, AUSF, and UDM). </p>
+          <div align="center">
+            <img src="images/fig1.svg" alt="UE Registration Overall Message Flow" width="70%">
+            <br>
+            <em>Figure 1: UE Registration Overall Message Flow</em>
+          </div>
+          
+          <p>The end-to-end process depicted above encompasses the initial radio access establishment, core network admission, mutual authentication, security context activation, and the final registration approval. Together, these phases ensure a secure and authorized connection to the 5G network, establishing the foundation for subsequent data services.</p>
+          <h3 id="31-phase-1-radio-access-establishment">3.1 Phase 1: Radio Access Establishment:</h3>
+          <p><strong>Step 1 – UE Power-On and Cell Synchronization</strong></p>
+          <p>Upon power-on, the UE must synchronize to the 5G radio environment to initiate communication.</p>
+          <p><strong>Interface: NR-Uu</strong></p>
+          <p><strong>UE Receives:</strong></p>
+          <ul>
+          <li>Synchronization Signal Blocks (SSB)</li>
+          <li>System Information Blocks (SIB1)</li>
+          <li>PLMN ID</li>
+          <li>Tracking Area Code</li>
+          <li>gNB broadcast cell parameters</li>
+          <li>RACH configuration parameters</li>
+          </ul>
+          <p><strong>UE Sends:</strong> 
+          Nothing yet, only performs decoding.</p>
+          <p>This step ensures that the UE identifies a valid 5G cell and acquires necessary system configuration.</p>
+          <p><strong>Step 2 – Random Access Channel (RACH) Procedure</strong></p>
+          <p>RACH provides a contention-based mechanism for initial uplink access. It assigns temporary identifiers and uplink timing.</p>
+          <p><strong>Interface: NR-Uu</strong></p>
+          <p><strong>UE Sends:</strong></p>
+          <ul>
+          <li>Random Access Preamble (Contains: Preamble ID, UE temporary randomness)</li>
+          </ul>
+          <p><strong>gNB Sends Back:</strong></p>
+          <ul>
+          <li>Random Access Response (RAR)<ul>
+          <li>Timing Advance</li>
+          <li>Temporary C-RNTI</li>
+          <li>UL Resource Grant</li>
+          </ul>
+          </li>
+          </ul>
+          <p><strong>Outcome:</strong>
+          The UE now has uplink timing coordination and an RRC path initiation capability.</p>
+          <h3 id="32-phase-2-rrc-connection-establishment">3.2 Phase 2: RRC Connection Establishment</h3>
+          <p><strong>Step 3 – RRC Connection Setup</strong></p>
+          <p>RRC is required to carry NAS signaling. This phase builds the essential control-plane bearer.</p>
+          <p><strong>Interface: NR-Uu</strong></p>
+          <p><strong>UE Sends:</strong></p>
+          <ul>
+          <li>RRC Setup Request<ul>
+          <li>RRC Establishment Cause (e.g., "Mobile Originating Signaling")</li>
+          </ul>
+          </li>
+          </ul>
+          <p><strong>gNB Sends:</strong></p>
+          <ul>
+          <li>RRC Setup<ul>
+          <li>Radio bearer configuration</li>
+          <li>RRC parameters</li>
+          </ul>
+          </li>
+          </ul>
+          <p>This provides UE a dedicated signaling channel.</p>
+          <p><strong>Step 4 – RRC Setup Complete + NAS Registration Request</strong></p>
+          <p>Now NAS signaling begins. UE submits identification, capabilities, and intent to register.</p>
+          <p><strong>Interfaces:</strong></p>
+          <ul>
+          <li>NR-Uu (radio layer)</li>
+          <li>N1 logical UE →  AMF carried over the N2 interface</li>
+          </ul>
+          <p><strong>UE Sends:</strong></p>
+          <ul>
+          <li>RRC Setup Complete containing: NAS Registration Request message</li>
+          </ul>
+          <p><strong>NAS Registration Request includes:</strong></p>
+          <ul>
+          <li>UE Identity<ul>
+          <li>SUCI (Subscription Concealed Identifier; encrypted SUPI)</li>
+          </ul>
+          </li>
+          <li>Registration Type:<ul>
+          <li>Initial Registration</li>
+          </ul>
+          </li>
+          <li>Last Known Tracking Area Identity</li>
+          <li>Requested NSSAI (Network Slice list)</li>
+          <li>UE Security Capability</li>
+          <li>PDU Session Status (optional)</li>
+          </ul>
+          <p>Note: UE still does not have an IP address. All communication is signaling based.</p>
+          <h3 id="33-phase-3-core-network-admission-handling">3.3 Phase 3: Core Network Admission Handling</h3>
+          <p><strong>Step 5 – Forwarding Registration to AMF</strong></p>
+          <p>The gNB cannot process NAS. It forwards data to AMF using NGAP signaling.</p>
+          <p><strong>Interface: N2</strong></p>
+          <p>gNB (192.168.1.20) → AMF (192.168.1.10)</p>
+          <p><strong>gNB Sends:</strong></p>
+          <ul>
+          <li>Initial UE Message<ul>
+          <li>RAN UE NGAP ID</li>
+          <li>NAS Registration Request (as received)</li>
+          <li>UE Location (Cell ID, TAI)</li>
+          <li>Access Cause</li>
+          </ul>
+          </li>
+          </ul>
+          <p>AMF now becomes the brain controlling UE registration.</p>
+          <p><strong>Step 6 – UE Identity Confirmation</strong></p>
+          <p>If SUCI or valid identity unavailable, AMF requests explicit identity.</p>
+          <p><strong>Interfaces: N1 via N2</strong></p>
+          <p><strong>AMF Sends to UE:</strong></p>
+          <ul>
+          <li>NAS Identity Request<ul>
+          <li>Requests: SUPI (IMSI) or 5G-GUTI or IMEI (if equipment validation needed)</li>
+          </ul>
+          </li>
+          </ul>
+          <p><strong>UE Sends:</strong></p>
+          <ul>
+          <li>NAS Identity Response<ul>
+          <li>SUPI (Permanent Subscriber Identity)</li>
+          </ul>
+          </li>
+          </ul>
+          <p>At this moment, AMF securely recognizes subscriber identity.</p>
+          <h3 id="34-phase-4-authentication--security">3.4 Phase 4: Authentication &amp; Security</h3>
+          <p><strong>Step 7 – Authentication Vector Acquisition</strong></p>
+          <p>Authentication validates subscriber identity through AUSF and UDM using 5G AKA.</p>
+          <p><strong>Interfaces &amp; IP Path:</strong></p>
+          <ul>
+          <li>AMF (192.168.1.10)</li>
+          <li>AUSF (192.168.1.30)</li>
+          <li>UDM (192.168.1.40)</li>
+          </ul>
+          <p><strong>AMF Sends to AUSF:</strong></p>
+          <ul>
+          <li>Authentication Request<ul>
+          <li>SUPI</li>
+          <li>Authentication Method = 5G AKA</li>
+          </ul>
+          </li>
+          </ul>
+          <p><strong>AUSF Communicates with UDM:</strong></p>
+          <ul>
+          <li>Requests Authentication Vectors</li>
+          </ul>
+          <p><strong>UDM Returns to AUSF:</strong></p>
+          <ul>
+          <li>RAND (Random Challenge)</li>
+          <li>AUTN (Authentication Token)</li>
+          <li>XRES*</li>
+          <li>K_SEAF (Security Anchor Key)</li>
+          </ul>
+          <p><strong>AUSF Sends to AMF:</strong></p>
+          <ul>
+          <li>Authentication Response including above vectors</li>
+          </ul>
+          <p><strong>Step 8 – NAS Authentication with UE</strong></p>
+          <p>Mutual authentication ensures both UE and network trust each other.</p>
+          <p><strong>AMF Sends to UE:</strong></p>
+          <ul>
+          <li>NAS Authentication Request<ul>
+          <li>RAND</li>
+          <li>AUTN</li>
+          </ul>
+          </li>
+          </ul>
+          <p><strong>UE Actions:</strong></p>
+          <ul>
+          <li>Validates AUTN → confirms network authenticity</li>
+          <li>Computes Response RES*</li>
+          </ul>
+          <p><strong>UE Sends:</strong></p>
+          <ul>
+          <li>NAS Authentication Response<ul>
+          <li>RES*</li>
+          </ul>
+          </li>
+          </ul>
+          <p>AMF compares RES with XRES*</p>
+          <p>If matched → UE authenticated successfully.</p>
+          <p><strong>Step 9 – Security Mode Command</strong></p>
+          <p>Security context activation ensures encryption and integrity protection.</p>
+          <p><strong>AMF Sends:</strong></p>
+          <ul>
+          <li>NAS Security Mode Command<ul>
+          <li>Selected Ciphering Algorithm (e.g., 128-NEA2)</li>
+          <li>Selected Integrity Algorithm (e.g., 128-NIA2)</li>
+          </ul>
+          </li>
+          </ul>
+          <p><strong>UE Sends:</strong></p>
+          <ul>
+          <li>Security Mode Complete</li>
+          </ul>
+          <p>From this point onward:</p>
+          <ul>
+          <li>All NAS signaling is encrypted</li>
+          <li>Integrity Protected</li>
+          <li>Secure communication is guaranteed</li>
+          </ul>
+          <h3 id="35-phase-5-subscription-policy--context-establishment">3.5 Phase 5: Subscription, Policy &amp; Context Establishment</h3>
+          <p><strong>Step 10 – UE Context Registration &amp; Subscription Retrieval</strong></p>
+          <p>AMF must register UE in network database and retrieve service entitlements.</p>
+          <p><strong>Interfaces:</strong></p>
+          <ul>
+          <li>Nudm (AMF ↔ UDM)</li>
+          <li>Npcf (AMF ↔ PCF)</li>
+          </ul>
+          <p><strong>AMF Sends:</strong></p>
+          <ul>
+          <li>UECM Registration</li>
+          <li>Subscription Data Request</li>
+          </ul>
+          <p><strong>UDM Returns:</strong></p>
+          <ul>
+          <li>Allowed NSSAI</li>
+          <li>Subscription Profile</li>
+          <li>Access Restrictions</li>
+          <li>Mobility Policies</li>
+          </ul>
+          <p><strong>AMF Requests Policy from PCF</strong></p>
+          <p><strong>PCF Returns:</strong></p>
+          <ul>
+          <li>Access/Mobility Policies</li>
+          <li>QoS Policy Rules</li>
+          <li>Charging Constraints</li>
+          </ul>
+          <p>This ensures user receives only authorized services.</p>
+          <h3 id="36-phase-6-registration-completion">3.6 Phase 6: Registration Completion</h3>
+          <p><strong>Step 11 – Registration Acceptance</strong></p>
+          <p>Network now approves the user and assigns operational identity.</p>
+          <p><strong>AMF Sends to UE (via gNB):</strong></p>
+          <ul>
+          <li>NAS Registration Accept<ul>
+          <li>5G-GUTI (Temporary Identity)</li>
+          <li>Allowed NSSAI</li>
+          <li>TAI List (allowed mobility region)</li>
+          <li>Timer Values (e.g., periodic registration)</li>
+          </ul>
+          </li>
+          </ul>
+          <p><strong>Step 12 – Radio Reconfiguration</strong></p>
+          <p>gNB applies any updated configuration.</p>
+          <p><strong>gNB Sends:</strong></p>
+          <ul>
+          <li>RRC Reconfiguration</li>
+          </ul>
+          <p><strong>UE Responds:</strong></p>
+          <ul>
+          <li>RRC Reconfiguration Complete</li>
+          </ul>
+          <p><strong>Step 13 – Final UE Acknowledgment</strong></p>
+          <p>This confirms successful attachment.</p>
+          <p><strong>UE Sends:</strong></p>
+          <ul>
+          <li>NAS Registration Complete</li>
+          </ul>
+          <p><strong>UE is now:</strong></p>
+          <ul>
+          <li>Registered, Authenticated, Secure, Policy-Enabled and Ready for Data Services</li>
+          </ul>
+          <h2 id="4-registration-types-in-5g">4. Registration Types in 5G</h2>
+          <p>The 3GPP specification (TS 24.501) defines several registration types, each serving different purposes:</p>
+          <h3 id="41-initial-registration">4.1 Initial Registration:</h3>
+          <p>Initial Registration is performed when the UE does not have any valid registration context with the network.</p>
+          <p><strong>Trigger Conditions:</strong></p>
+          <ul>
+          <li>UE is powered on for the first time</li>
+          <li>UE enters a new Public Land Mobile Network (PLMN)</li>
+          <li>UE does not possess a valid 5G-GUTI</li>
+          <li>UE was previously deregistered</li>
+          </ul>
+          <p><strong>Network Behavior:</strong></p>
+          <ul>
+          <li>Full authentication is mandatory</li>
+          <li>Fresh security keys are generated</li>
+          <li>New UE context is created in AMF and UDM</li>
+          <li>UE is assigned a new 5G-GUTI</li>
+          <li>Complete subscription data is retrieved</li>
+          </ul>
+          <p><strong>JSON Representation:</strong></p>
+          <pre><code class="language-json">{
+            "registrationType": "INITIAL",
+            "description": "First-time registration to the network"
+          }
+          </code></pre>
+          <h3 id="42-mobility-registration-update">4.2 Mobility Registration Update:</h3>
+          <p>Mobility Registration Update is triggered when the UE moves across Tracking Area boundaries.</p>
+          <p><strong>Trigger Conditions:</strong></p>
+          <ul>
+          <li>UE enters a Tracking Area Identity (TAI) not in its current Registration Area</li>
+          <li>UE changes serving AMF (AMF relocation)</li>
+          <li>UE moves between different Radio Access Technologies</li>
+          </ul>
+          <p><strong>Network Behavior:</strong></p>
+          <ul>
+          <li>Authentication may be skipped if security context remains valid</li>
+          <li>UE location is updated in AMF and UDM</li>
+          <li>Paging area is recalculated</li>
+          <li>Registration Area may be updated</li>
+          <li>Signaling overhead is minimized</li>
+          </ul>
+          <p><strong>JSON Representation:</strong></p>
+          <pre><code class="language-json">{
+            "registrationType": "MOBILITY",
+            "description": "Registration update due to UE movement across TA boundary"
+          }
+          </code></pre>
+          <h3 id="43-periodic-registration-update">4.3 Periodic Registration Update</h3>
+          <p>Periodic registration serves as a keep-alive mechanism:</p>
+          <ul>
+          <li>Triggered by expiry of T3512 timer (typically 54 minutes)</li>
+          <li>Confirms UE is still reachable</li>
+          <li>Prevents stale UE contexts</li>
+          <li>No location update or slice modification</li>
+          </ul>
+          <h2 id="5-initial-registration-call-flow">5. Initial Registration Call Flow</h2>
+          <p>The following table details each message in the Initial Registration procedure:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Step</th>
+          <th>Message</th>
+          <th>Direction</th>
+          <th>Purpose</th>
+          <th>Key Parameters</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>1</td>
+          <td>RRCSetupComplete + Registration Request</td>
+          <td>UE → gNB → AMF</td>
+          <td>Initiate registration</td>
+          <td>SUCI, Requested NSSAI, Registration Type</td>
+          </tr>
+          <tr>
+          <td>2</td>
+          <td>Identity Request</td>
+          <td>AMF → gNB → UE</td>
+          <td>Request permanent identity</td>
+          <td>Identity Type (SUPI)</td>
+          </tr>
+          <tr>
+          <td>3</td>
+          <td>Identity Response</td>
+          <td>UE → gNB → AMF</td>
+          <td>Provide permanent identity</td>
+          <td>SUPI (IMSI)</td>
+          </tr>
+          <tr>
+          <td>4</td>
+          <td>Authentication Request</td>
+          <td>AMF → AUSF</td>
+          <td>Initiate authentication</td>
+          <td>SUPI, serving network name</td>
+          </tr>
+          <tr>
+          <td>5</td>
+          <td>Sec Data Request</td>
+          <td>AUSF → UDM</td>
+          <td>Fetch authentication vectors</td>
+          <td>SUPI</td>
+          </tr>
+          <tr>
+          <td>6</td>
+          <td>Authentication Vectors</td>
+          <td>UDM → AUSF</td>
+          <td>Provide auth data</td>
+          <td>RAND, AUTN, XRES*</td>
+          </tr>
+          <tr>
+          <td>7</td>
+          <td>Authentication Challenge</td>
+          <td>AUSF → AMF</td>
+          <td>Return challenge</td>
+          <td>RAND, AUTN</td>
+          </tr>
+          <tr>
+          <td>8</td>
+          <td>NAS Authentication Request</td>
+          <td>AMF → gNB → UE</td>
+          <td>Challenge subscriber</td>
+          <td>RAND, AUTN</td>
+          </tr>
+          <tr>
+          <td>9</td>
+          <td>NAS Authentication Response</td>
+          <td>UE → gNB → AMF</td>
+          <td>Prove identity</td>
+          <td>RES*</td>
+          </tr>
+          <tr>
+          <td>10</td>
+          <td>Security Mode Command</td>
+          <td>AMF → gNB → UE</td>
+          <td>Establish security</td>
+          <td>NAS encryption, NAS integrity algorithms</td>
+          </tr>
+          <tr>
+          <td>11</td>
+          <td>Security Mode Complete</td>
+          <td>UE → gNB → AMF</td>
+          <td>Confirm security setup</td>
+          <td>Protected with security</td>
+          </tr>
+          <tr>
+          <td>12</td>
+          <td>Registration Accept</td>
+          <td>AMF → gNB → UE</td>
+          <td>Grant registration</td>
+          <td>5G-GUTI, Allowed NSSAI, TAI List</td>
+          </tr>
+          <tr>
+          <td>13</td>
+          <td>Registration Complete</td>
+          <td>UE → gNB → AMF</td>
+          <td>Acknowledge success</td>
+          <td>Confirmation</td>
+          </tr>
+          </tbody></table>
+          <h2 id="6-mobility-registration-update-flow">6. Mobility Registration Update Flow</h2>
+          <p>When a UE moves to a new Tracking Area outside its Registration Area:</p>
+          <p><strong>Trigger:</strong></p>
+          <ul>
+          <li>UE detects new TAI from system information</li>
+          <li>New TAI not present in UE's stored TAI List</li>
+          <li>UE initiates Mobility Registration Update</li>
+          </ul>
+          <p><strong>Simplified Flow:</strong></p>
+          <pre><code>UE → gNB → AMF: Mobility Registration Request
+            {registrationType: "MOBILITY", 5G-GUTI, lastVisitedTAI}
+            
+          AMF: Verify UE context and security
+            - If security context valid → skip authentication
+            - Update UE location in UDM
+            
+          AMF → UE: Registration Accept
+            {Updated TAI List, same or new 5G-GUTI}
+            
+          UE → AMF: Registration Complete
+          </code></pre>
+          <p><strong>Key Differences from Initial Registration:</strong></p>
+          <ul>
+          <li>Authentication may be bypassed if security context is fresh</li>
+          <li>No subscription data retrieval needed</li>
+          <li>Faster procedure due to existing context</li>
+          <li>Primarily updates location information</li>
+          </ul>
+          
+          </div>
+          <div class="bug-report-mobile">
+              <bug-report id="bug-report" title="[BUG REPORT] Demonstrate Registration Management Procedures" page-type="text" context-info="{&quot;organisation&quot;:&quot;Virtual Labs&quot;,&quot;developer_institute&quot;:&quot;DLBG&quot;,&quot;expname&quot;:&quot;Demonstrate Registration Management Procedures&quot;,&quot;labname&quot;:&quot;Virtual Lab&quot;,&quot;phase&quot;:&quot;Testing&quot;}" checkbox-json="{&quot;text&quot;:[&quot;Insufficient Content&quot;],&quot;video&quot;:[&quot;Insufficient Content&quot;],&quot;assesment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;assessment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;simulation&quot;:[&quot;Simulation Not Working&quot;,&quot;Incorrect Results/Observations&quot;,&quot;Insufficient/Incorrect Instructions&quot;],&quot;DEFAULT&quot;:[&quot;Page Not Loading&quot;,&quot;Content Not Visible&quot;,&quot;Incorrect Content&quot;]}" position="override" button_style="
+                          position: fixed; 
+                          bottom: 20px;
+                          right: 20px;
+                          z-index: 1;
+                          font-size: 0;
+                          padding: 25px;
+                          border-radius: 50%;
+                          border: none;
+                          background-color: #0fc0ff;
+                          background-image: url(data:image/png;base64,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);
+                          background-repeat: no-repeat;
+                          background-position: center;
+                          background-size: 30px;
+                          filter: invert(1);">
+              </bug-report>
+          </div>        </div>
+      </div>
+      <footer class="text-light pt-2 vlabs-footer d-flex flex-column">
+        <div class="row px-5 mx-0">
+          <div class="col d-flex flex-column">
+            <span class="font-weight-bold vlabs-footer-sect-name pb-2 mb-3">Community Links</span>
+            <a href="https://www.sakshat.ac.in/" class="text-light">Sakshat Portal</a>
+            <a href="http://outreach.vlabs.ac.in/" class="text-light">Outreach Portal</a>
+            <a href="https://vlab.co.in/faq" class="text-light">FAQ: Virtual Labs</a>
+          </div>
+          <div class="col d-flex flex-column">
+            <span class="font-weight-bold vlabs-footer-sect-name pb-2 mb-3">Contact Us</span>
+            <span> Phone: General Information: 011-26582050 </span>
+            <span> Email: support@vlabs.ac.in </span>
+          </div>
+          <div class="col d-flex flex-column">
+            <span class="font-weight-bold vlabs-footer-sect-name pb-2 mb-3">Follow Us</span>
+            <div class="social-links">
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #55acee;" href="https://twitter.com/TheVirtualLabs">
+      	  <i class="fab fa-twitter"></i>
+      	</a>
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #3b5998;" href="https://www.facebook.com/Virtual-Labs-IIT-Delhi-301510159983871/">
+      	  <i class="fab fa-facebook"></i>
+      	</a>
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #e52d27;" href="https://www.youtube.com/watch?v=asxRaOgk6a0">
+      	  <i class="fab fa-youtube"></i>
+      	</a>
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #2867B2;" href="https://in.linkedin.com/in/virtual-labs-008ba9136">
+      	  <i class="fab fa-linkedin"></i>
+      	</a>
+            </div>
+          </div>
+        </div>
+        <div class="m-0 py-2 text-center" style="font-family: &quot;Open Sans&quot;, sans-serif; background: #212121;">
+          <a class="text-primary font-weight-bold" href="https://www.gnu.org/licenses/agpl-3.0.en.html"> AGPL 3.0 </a>
+          &nbsp;&amp;&nbsp;
+          <a class="text-primary font-weight-bold" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"> Creative Commons (CC BY-NC-SA 4.0) </a>
+        </div>
+      </footer>
+    <script src="./assets/js/toggleSidebar.js"></script>
+    <script src="./assets/js/event-handler.js"></script>
+
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register("sw.js");
+        });
+      }
+    </script>
+  
+
+<script type="module" src="https://cdn.vlabs.ac.in/bug-report/vlabs-bug-report.js"></script><script type="module" src="/exp-registration-management-dei/plugins/svc-rating/index.js"></script><script type="module" src="/exp-registration-management-dei/plugins/svc-rating/config.js"></script><script type="module" src="https://apis.google.com/js/api.js"></script></body></html>
