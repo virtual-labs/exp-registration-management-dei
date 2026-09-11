@@ -1,3 +1,5 @@
+**Video Walkthrough:** We have created a video demonstrating this experiment where we perform the procedure and explain the steps. [Click here to watch on YouTube]( https://youtu.be/wlzpmG_J5W0)
+
 ## Step 1: Deploy Core Network
 
 Choose one of the following deployment options:

@@ -1,3 +1,6 @@
+> **Audio Explanation:** For a comprehensive understanding of these theoretical concepts, you can listen on YouTube. 
+> [**Click here to listen the audio**](https://youtu.be/jft6aGb_KFk)
+
 ## 1. Introduction
 
 Registration Management is one of the most fundamental procedures in 5G Standalone (SA) networks, serving as the gateway through which User Equipment gains authorized access to network services. This experiment provides comprehensive hands-on experience with both Initial Registration and Mobility Registration Update procedures, demonstrating how 5G networks manage user identity, authentication, security, and mobility.
