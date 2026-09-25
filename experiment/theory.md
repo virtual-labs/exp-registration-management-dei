@@ -1,5 +1,7 @@
-> **Audio Explanation:** For a comprehensive understanding of these theoretical concepts, you can listen on YouTube. 
-> [**Click here to listen the audio**](https://youtu.be/jft6aGb_KFk)
+> **Audio Explanations:** For a more comprehensive understanding of these theoretical concepts, supplementary audio guides are available on YouTube.
+> 
+> - [**Listen in English**](https://youtu.be/HIiOc-gMYaI)
+> - [**Listen in Hindi**](https://youtu.be/jft6aGb_KFk)
 
 ## 1. Introduction
 
